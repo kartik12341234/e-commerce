@@ -3,32 +3,30 @@ import React, { useEffect, useState } from "react";
 import "./signup.css";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-function Signup() {
+function Login() {
+  const route = useRouter();
   const [signup, setsignup] = useState({
-    name: "",
     email: "",
-    number: "",
+
     password: "",
   });
 
   const handlesubmit = async (event) => {
     event.preventDefault();
 
-    if (!signup.name || !signup.email || !signup.password || !signup.number) {
-      toast.error("Please fill all the fields");
-    }
-
     try {
-      const response = await axios.post("/api/users/signup", signup);
+      const response = await axios.post("/api/users/login", signup);
       console.log(response.data);
+      toast.success("Login successfully");
+
       localStorage.setItem("login", "true");
-      toast.success("User created successfully");
+      route.push("/");
     } catch (error) {
       if (error.response) {
-        if (error.response.status === 400) {
-          toast.error("Email already exists");
+        if (error.response.status === 404) {
+          toast.error("User not found");
         }
         if (error.response === 201) {
           toast.error("Something went wrong");
@@ -56,14 +54,6 @@ function Signup() {
       <form onSubmit={handlesubmit}>
         <div className="forminput">
           <input
-            type="text"
-            name="name"
-            onChange={handleInputChange}
-            placeholder="Name"
-            value={signup.name}
-            className="in"
-          />
-          <input
             type="email"
             name="email"
             onChange={handleInputChange}
@@ -71,14 +61,7 @@ function Signup() {
             value={signup.email}
             className="in"
           />
-          <input
-            type="number"
-            name="number"
-            onChange={handleInputChange}
-            placeholder="Number"
-            value={signup.number}
-            className="in"
-          />
+
           <input
             type="password"
             name="password"
@@ -87,24 +70,9 @@ function Signup() {
             value={signup.password}
             className="in"
           />
-          <p
-            style={{
-              textAlign: "center",
-              fontSize: "15px",
 
-              // fontWeight: "bold",
-              color: "grey",
-            }}
-          >
-            Already have an account?{" "}
-            <Link href="/login">
-              <span style={{ color: "blue", textDecorationLine: "underline" }}>
-                Login here
-              </span>{" "}
-            </Link>
-          </p>
           <button type="submit" className="cre">
-            create account
+            Login now
           </button>
         </div>
       </form>
@@ -114,4 +82,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;

@@ -14,7 +14,7 @@
 */
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -94,6 +94,11 @@ const navigation = {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [token, settoken] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("login");
+    settoken(true);
+  });
 
   return (
     <div className="bg-white">
@@ -356,12 +361,21 @@ export default function Header() {
 
               <div className="ml-auto flex items-center">
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                  <Link
-                    href="/register"
-                    className="text-sm font-medium text-gray-700 hover:text-gray-800"
-                  >
-                    Login here
-                  </Link>
+                  {!token ? (
+                    <a
+                      href="/login"
+                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                    >
+                      Sign in
+                    </a>
+                  ) : (
+                    <a
+                      href="/logout"
+                      className="text-sm font-medium text-gray-700 hover:text-gray-800"
+                    >
+                      Logout
+                    </a>
+                  )}
                 </div>
 
                 {/* Search */}
