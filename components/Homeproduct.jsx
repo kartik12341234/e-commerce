@@ -58,7 +58,15 @@ function ProductCard({ product }) {
         className="product-image"
       />
       <div className="product-details">
-        <p className="product-size">{product.size}</p>
+        <p className="product-size">
+          <label for="size">Choose a size:</label>
+          <select name="size" id="size">
+            <option value="250ml">250ml</option>
+            <option value="500ml">500ml</option>
+            <option value="750ml">750ml</option>
+            <option value="1l">1L</option>
+          </select>
+        </p>
         <h3 className="product-name">{product.name}</h3>
         <div className="product-price">₹{product.price}</div>
         <button className="add-to-cart">Add to cart</button>
