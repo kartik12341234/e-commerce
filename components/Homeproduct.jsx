@@ -49,7 +49,9 @@ export default function Homeproduct() {
 function ProductCard({ product }) {
   return (
     <div className="product-card">
-      <div className="product-badge">{product.badge}</div>
+      <div className="product-badge">
+        <h1>Top seller</h1>
+      </div>
       <img
         src={product.imageUrl}
         alt={product.name}

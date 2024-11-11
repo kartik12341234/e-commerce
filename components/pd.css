@@ -25,6 +25,7 @@
 }
 
 .product-card {
+  position: relative;
   min-width: 270px;
   height: 430px;
   background-color: #fff;
@@ -37,12 +38,14 @@
 }
 
 .product-badge {
-  background-color: #28a745;
+  background-color: #6a6c6b;
   color: #fff;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
   position: absolute;
+  /* width: 700px; */
+  z-index: 10000;
   top: 8px;
   left: 8px;
 }
