@@ -1,5 +1,4 @@
 import Product from "@/model/Product";
-import mongoose from "mongoose";
 import { connect } from "@/config/Dbconfig";
 import cloudinary from "cloudinary";
 
@@ -14,31 +13,45 @@ export async function POST(req) {
   try {
     await connect();
 
-    const { name, description, price, size, image } = await req.json();
+    const { name, description, price, size, image, additionalImages } =
+      await req.json();
+    console.log(name, description, price, size, image, additionalImages);
 
-    // 1. Check if the image is present
-    if (!image) {
-      throw new Error("Image is required.");
+    // 1. Validate the price
+    if (isNaN(price) || price <= 0) {
+      throw new Error("Invalid price.");
     }
 
-    // 2. Upload image to Cloudinary
+    // 2. Upload the primary image to Cloudinary
     const uploadResponse = await cloudinary.v2.uploader.upload(image, {
       folder: "organic",
       resource_type: "image",
     });
 
-    // 3. Create new product with image URL from Cloudinary
+    // 3. Upload additional images (if any)
+    const additionalImageUrls = await Promise.all(
+      (additionalImages || []).map(async (img) => {
+        const res = await cloudinary.v2.uploader.upload(img, {
+          folder: "organic",
+          resource_type: "image",
+        });
+        return res.secure_url;
+      })
+    );
+
+    // 4. Create the new product with the image URLs
     const newProduct = new Product({
       name,
       description,
       price,
       size,
       imageUrl: uploadResponse.secure_url,
+      additionalImages: additionalImageUrls,
     });
 
     await newProduct.save();
 
-    // Return JSON response with status code 201
+    // 5. Return success response
     return new Response(
       JSON.stringify({ success: true, product: newProduct }),
       { status: 201, headers: { "Content-Type": "application/json" } }
@@ -52,14 +65,13 @@ export async function POST(req) {
     );
   }
 }
+
 export async function GET(req) {
   try {
     await connect();
 
-    // Fetch all products from the database
     const products = await Product.find({});
 
-    // Return JSON response with status code 200
     return new Response(JSON.stringify({ success: true, products }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -67,7 +79,6 @@ export async function GET(req) {
   } catch (error) {
     console.error("Error fetching products:", error);
 
-    // Return JSON response with status code 500
     return new Response(
       JSON.stringify({ success: false, message: "Error fetching products" }),
       { status: 500, headers: { "Content-Type": "application/json" } }

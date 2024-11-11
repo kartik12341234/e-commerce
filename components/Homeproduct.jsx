@@ -60,7 +60,11 @@ function ProductCard({ product }) {
       <div className="product-details">
         <p className="product-size">
           <label for="size">Choose a size:</label>
-          <select name="size" id="size">
+          <select
+            name="size"
+            id="size"
+            style={{ borderBottom: "1px solid black" }}
+          >
             <option value="250ml">250ml</option>
             <option value="500ml">500ml</option>
             <option value="750ml">750ml</option>
