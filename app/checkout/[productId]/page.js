@@ -259,7 +259,9 @@ export default function CheckoutForm({ params }) {
           <div
             className="pr"
             style={{
-              width: "80%",
+              width: "100%",
+              border: "1px solid #1469a2",
+              borderRadius: "5px",
               backgroundColor: "#1469a2",
               height: "50px",
               padding: "10px",
@@ -269,7 +271,7 @@ export default function CheckoutForm({ params }) {
             }}
           >
             <p>
-              Product: {product?.name} - {product?.selectedSize.size} jar
+              {product?.name} - {product?.selectedSize.size} jar
             </p>
           </div>
           <p>
