@@ -1,4 +1,3 @@
-// models/Product.js
 import mongoose from "mongoose";
 
 const ProductSchema = new mongoose.Schema(
@@ -12,20 +11,31 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       minlength: 100,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
-    size: {
+    ingredients: {
       type: String,
       required: true,
     },
+    Benefits: {
+      type: String,
+      required: true,
+    },
+    storageinfo: {
+      type: String,
+      required: true,
+      minlength: 100,
+    },
+    sizes: [
+      {
+        size: { type: String, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
     imageUrl: {
       type: String,
       required: true,
     },
     additionalImages: {
-      type: [String], // Array of image URLs
+      type: [String],
       default: [],
     },
   },

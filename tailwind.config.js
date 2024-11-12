@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      zIndex: {
+        10000: "10000", // Custom z-index value
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

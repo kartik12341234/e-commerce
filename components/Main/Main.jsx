@@ -15,7 +15,7 @@ const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 const Main = () => {
   return (
-    <div className="main">
+    <div className="main" style={{ zIndex: "-9999" }}>
       {/* <Header /> */}
       <div className="con">
         <EmblaCarousel slides={SLIDES} options={OPTIONS} />

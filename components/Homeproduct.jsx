@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import "./pd.css";
+import Link from "next/link";
 import axios from "axios";
 
 export default function Homeproduct() {
@@ -10,7 +11,7 @@ export default function Homeproduct() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/api/admin/product");
-        const productsData = response.data.products.slice(0, 4); // Only get the first 4 products
+        const productsData = response.data.products.slice(0, 8); // Only get the first 4 products
         setProducts(productsData); // Set only the first 4 products
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -33,47 +34,64 @@ export default function Homeproduct() {
       }}
     >
       <div className="ti">
-        <h1>Top Products</h1>
+        <h1>Best Sellers</h1>
       </div>
-      <div className="product-list" style={{ marginTop: "1px" }}>
-        <div className="procon">
-          {products.map((product, index) => (
-            <ProductCard key={index} product={product} />
-          ))}
+      <div className="product-listx" style={{ marginTop: "1px" }}>
+        <div className="proconx">
+          {products.map((product) => {
+            const productId = product._id; // Declare the productId variable
+            return (
+              <Link key={productId} href={`/product/${productId}`}>
+                <ProductCard product={product} />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 }
-
 function ProductCard({ product }) {
   return (
-    <div className="product-card">
-      <div className="product-badge">
+    <div className="product-cardx">
+      <div className="product-badgex">
         <h1>Top seller</h1>
       </div>
       <img
         src={product.imageUrl}
         alt={product.name}
-        className="product-image"
+        className="product-imagekk"
       />
-      <div className="product-details">
-        <p className="product-size">
-          <label for="size">Choose a size:</label>
+      <div className="product-detailsx">
+        <p className="product-sizex">
+          <label htmlFor="size">Choose a size:</label>
           <select
             name="size"
             id="size"
             style={{ borderBottom: "1px solid black" }}
           >
-            <option value="250ml">250ml</option>
-            <option value="500ml">500ml</option>
-            <option value="750ml">750ml</option>
-            <option value="1l">1L</option>
+            {product.sizes.map((size) => (
+              <option key={size._id} value={size.size}>
+                {size.size} - ₹{size.price}
+              </option>
+            ))}
           </select>
         </p>
-        <h3 className="product-name">{product.name}</h3>
-        <div className="product-price">₹{product.price}</div>
-        <button className="add-to-cart">Add to cart</button>
+        <h3 className="product-namex">{product.name}</h3>
+        {/* <div className="product-pricex">₹{product.price}</div> */}
+        <div
+          className="bns"
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            gap: "10px",
+            flexDirection: "column",
+          }}
+        >
+          {" "}
+          <button className="add-to-cartx">Add to cart</button>
+          <button className="add-to-cartx">Buy now</button>
+        </div>
       </div>
     </div>
   );

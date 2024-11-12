@@ -1,14 +1,15 @@
-// frontend/Page.js
 "use client";
 import React, { useState } from "react";
 
 export default function Page() {
   const [product, setProduct] = useState({
-    image: null,
     name: "",
     description: "",
-    price: "",
-    size: "",
+    ingredients: "",
+    Benefits: "",
+    storageinfo: "",
+    sizes: [{ size: "", price: "" }],
+    image: null,
     additionalImages: [],
   });
 
@@ -20,6 +21,20 @@ export default function Page() {
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSizeChange = (index, e) => {
+    const { name, value } = e.target;
+    const updatedSizes = [...product.sizes];
+    updatedSizes[index][name] = value;
+    setProduct((prev) => ({ ...prev, sizes: updatedSizes }));
+  };
+
+  const addSizeField = () => {
+    setProduct((prev) => ({
+      ...prev,
+      sizes: [...prev.sizes, { size: "", price: "" }],
+    }));
+  };
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -29,21 +44,13 @@ export default function Page() {
   };
 
   const handleAdditionalImagesUpload = (e) => {
-    const files = e.target.files;
-    const imageFiles = Array.from(files).slice(0, 10); // Limit to 10 images
-
-    // Append new files to the existing additionalImages state
+    const files = Array.from(e.target.files).slice(0, 10);
     setProduct((prev) => ({
       ...prev,
-      additionalImages: [...prev.additionalImages, ...imageFiles],
+      additionalImages: [...prev.additionalImages, ...files],
     }));
-
-    // Generate image previews for the newly added images
-    const imagePreviews = imageFiles.map((file) => URL.createObjectURL(file));
-    setAdditionalImagesPreview((prevPreviews) => [
-      ...prevPreviews,
-      ...imagePreviews,
-    ]);
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setAdditionalImagesPreview((prev) => [...prev, ...newPreviews]);
   };
 
   const handleSubmit = async (e) => {
@@ -52,55 +59,46 @@ export default function Page() {
       const formData = {
         name: product.name,
         description: product.description,
-        price: product.price,
-        size: product.size,
+        ingredients: product.ingredients,
+        Benefits: product.Benefits,
+        storageinfo: product.storageinfo,
+        sizes: product.sizes,
       };
 
-      // Convert images to base64 strings
-      const reader = new FileReader();
-
-      // Primary image
       if (product.image) {
-        reader.readAsDataURL(product.image);
-        reader.onloadend = async () => {
-          formData.image = reader.result;
+        const imageData = await readFileAsDataURL(product.image);
+        formData.image = imageData;
+      }
 
-          // Handle additional images
-          const additionalImagePromises = product.additionalImages.map(
-            (image) => {
-              return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(image);
-                reader.onloadend = () => resolve(reader.result);
-              });
-            }
-          );
+      const additionalImages = await Promise.all(
+        product.additionalImages.map(readFileAsDataURL)
+      );
+      formData.additionalImages = additionalImages;
 
-          const additionalImages = await Promise.all(additionalImagePromises);
-          formData.additionalImages = additionalImages;
+      const response = await fetch("/api/admin/product", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-          // Send data to the API
-          const response = await fetch("/api/admin/product", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          });
-
-          const data = await response.json();
-          if (data.success) {
-            console.log("Product added:", data.product);
-            alert("Product added successfully");
-          } else {
-            console.error("Error adding product:", data.message);
-          }
-        };
+      const data = await response.json();
+      if (data.success) {
+        alert("Product added successfully");
+      } else {
+        console.error("Error adding product:", data.message);
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
+
+  const readFileAsDataURL = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -117,14 +115,14 @@ export default function Page() {
               type="file"
               accept="image/*"
               onChange={handleImageUpload}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
               required
             />
             {imagePreview && (
               <img
                 src={imagePreview}
                 alt="Preview"
-                className="mt-2 h-32 w-full object-cover rounded-lg shadow-md"
+                className="mt-2 h-32 w-full object-cover rounded-lg"
               />
             )}
           </div>
@@ -136,9 +134,9 @@ export default function Page() {
             <input
               type="file"
               accept="image/*"
-              onChange={handleAdditionalImagesUpload}
-              className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
               multiple
+              onChange={handleAdditionalImagesUpload}
+              className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
             />
             {additionalImagesPreview.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
@@ -147,7 +145,7 @@ export default function Page() {
                     key={index}
                     src={preview}
                     alt={`Additional Preview ${index}`}
-                    className="h-32 w-32 object-cover rounded-lg shadow-md"
+                    className="h-32 w-32 object-cover rounded-lg"
                   />
                 ))}
               </div>
@@ -163,8 +161,7 @@ export default function Page() {
               name="name"
               value={product.name}
               onChange={handleChange}
-              placeholder="Enter product name"
-              className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
               required
             />
           </div>
@@ -177,41 +174,87 @@ export default function Page() {
               name="description"
               value={product.description}
               onChange={handleChange}
-              placeholder="Enter product description"
               rows="4"
-              className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Price
+              Ingredients
             </label>
-            <input
-              type="number"
-              name="price"
-              value={product.price}
+            <textarea
+              name="ingredients"
+              value={product.ingredients}
               onChange={handleChange}
-              placeholder="Enter product price"
-              className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
+              rows="2"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Size
+              Benefits
             </label>
-            <input
-              type="text"
-              name="size"
-              value={product.size}
+            <textarea
+              name="Benefits"
+              value={product.Benefits}
               onChange={handleChange}
-              placeholder="Enter product size"
-              className="mt-1 p-2 w-full border border-gray-300 rounded-lg focus:ring focus:ring-indigo-200"
+              rows="2"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
               required
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Storage Information
+            </label>
+            <textarea
+              name="storageinfo"
+              value={product.storageinfo}
+              onChange={handleChange}
+              rows="2"
+              className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Sizes and Prices
+            </label>
+            {product.sizes.map((size, index) => (
+              <div key={index} className="flex gap-2 mt-2">
+                <input
+                  type="text"
+                  name="size"
+                  placeholder="Size (e.g., 250 ml)"
+                  value={size.size}
+                  onChange={(e) => handleSizeChange(index, e)}
+                  className="p-2 w-full border border-gray-300 rounded-lg"
+                  required
+                />
+                <input
+                  type="number"
+                  name="price"
+                  placeholder="Price"
+                  value={size.price}
+                  onChange={(e) => handleSizeChange(index, e)}
+                  className="p-2 w-full border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addSizeField}
+              className="mt-2 text-blue-500"
+            >
+              + Add Another Size
+            </button>
           </div>
 
           <button
