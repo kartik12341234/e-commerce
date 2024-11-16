@@ -4,3 +4,11 @@
 .forphone {
   display: none;
 }
+@media (max-width: 768px) {
+  .forphone {
+    position: fixed;
+    bottom: 0;
+    z-index: 9999;
+    display: flex; /* Or use flex, grid, inline, inline-block, etc., as needed */
+  }
+}
