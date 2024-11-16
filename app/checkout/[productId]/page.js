@@ -60,16 +60,19 @@ export default function CheckoutForm({ params }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("start");
     try {
-      const response = await axios.post(`/api/buy/${productId}`, {
-        ...userInfo,
+      const response = await axios.post("/api/buy/checkout", {
+        userInfo,
+        productId,
         product: product.name,
         quantity,
         price: product.selectedSize.price,
       });
-      if (response.status === 200) {
-        router.push("/confirmation"); // Navigate to order confirmation page
-      }
+      // if (response.status === 200) {
+      //   router.push("/confirmation");
+      // }
+      alert("Order placed successfully!");
     } catch (err) {
       console.error("Error processing checkout:", err);
       alert("Error processing checkout. Please try again.");

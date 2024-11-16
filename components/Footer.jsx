@@ -169,7 +169,7 @@ export default function Footer() {
                 <ul role="list" className="mt-6 space-y-4">
                   <li>
                     <a
-                      href="#"
+                      href="/rfe.pdf"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Claim
@@ -177,7 +177,7 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/pp.pdf"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Privacy
@@ -185,7 +185,7 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/spf.pdf"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Terms
