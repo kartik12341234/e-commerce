@@ -1,7 +1,7 @@
 // pages/api/buy/checkout.js
 import Razorpay from "razorpay";
 import { connect } from "@/config/Dbconfig";
-import order from "@/model/order";
+import order from "@/model/Order";
 // imporrt order
 
 connect();
