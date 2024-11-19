@@ -93,7 +93,7 @@ export default function Header() {
 
                 {/* Logo */}
                 <div className="ml-4 flex lg:ml-0">
-                  <Link src="/">
+                  <Link href="/">
                     <span className="sr-only">Your Company</span>
                     <img src="file.svg" alt="" className="h-8 w-auto" />
                   </Link>
@@ -135,7 +135,7 @@ export default function Header() {
                                         />
                                       </div>
                                       <Link
-                                        src={item.href}
+                                        href="#"
                                         className="mt-6 block font-medium text-gray-900"
                                       >
                                         {item.name}

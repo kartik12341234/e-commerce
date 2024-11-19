@@ -26,7 +26,7 @@ import axios from "axios";
 
 const Headerphone = () => {
   const [pic, setPic] = useState(""); // Initialize state for favorite emoji
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userId, setUserId] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
   const [menu, setMenu] = useState(false); // Toggle for the mobile menu
