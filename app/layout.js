@@ -5,6 +5,8 @@ import Footer from "@/components/Footer";
 import Headerphone from "@/components/Headerphone";
 import Know from "@/components/know";
 import CertificationSlider from "@/components/Certi";
+import IconMenu from "@/components/IconMenu";
+import Coupon from "@/components/Coupon";
 export const metadata = {
   title: "OIL Site",
   description: "a oil site",
@@ -14,7 +16,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Header></Header>
+        <div className="cou">
+          <Coupon></Coupon>
+        </div>
+        <div className="mobi">
+          <Header></Header>
+        </div>
+        <IconMenu></IconMenu>
         {children}
         <div className="forphone">
           <Headerphone />

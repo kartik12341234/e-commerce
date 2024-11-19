@@ -5,6 +5,9 @@
   display: none;
 }
 @media (max-width: 768px) {
+  .mobi {
+    display: none;
+  }
   .forphone {
     position: fixed;
     bottom: 0;
