@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 import "./pq.css";
-export default function page() {
+export default function Page() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
