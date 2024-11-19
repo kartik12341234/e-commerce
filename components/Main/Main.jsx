@@ -10,7 +10,7 @@ import { gsap } from "gsap";
 // import Spline from "@splinetool/react-spline";
 
 const OPTIONS = { loop: true };
-const SLIDE_COUNT = 4;
+const SLIDE_COUNT = 8;
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
 
 const Main = () => {
