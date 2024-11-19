@@ -2,6 +2,7 @@
 
 .containerp {
   /* display: flex; */
+  height: auto;
   flex-direction: column;
   gap: 2rem;
   max-width: 1200px;

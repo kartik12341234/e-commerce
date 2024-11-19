@@ -1,0 +1,33 @@
+.tableContainer {
+  margin: 20px;
+  overflow-x: auto;
+}
+
+.oilTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: Arial, sans-serif;
+}
+
+.oilTable th,
+.oilTable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  vertical-align: top;
+}
+
+.oilTable th {
+  background-color: #f4f4f4;
+}
+
+.oilImage {
+  width: 100px;
+  height: auto;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.oilTable td div {
+  margin-bottom: 5px;
+}

@@ -1,17 +1,17 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import "./pd.css";
-import Link from "next/link";
+import React from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-
-export default function Homeproduct() {
+import Link from "next/link";
+import "./pq.css";
+export default function page() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/api/admin/product");
-        const productsData = response.data.products.slice(0, 5); // Only get the first 4 products
+        const productsData = response.data.products.slice(0, 8); // Only get the first 4 products
         setProducts(productsData); // Set only the first 4 products
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -28,7 +28,7 @@ export default function Homeproduct() {
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        marginTop: "-100px",
+        // marginTop: "-100px",
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -36,8 +36,8 @@ export default function Homeproduct() {
       <div className="ti">
         <h1>Best Sellers</h1>
       </div>
-      <div className="product-listx" style={{ marginTop: "1px" }}>
-        <div className="proconx">
+      <div className="product-listxw" style={{ marginTop: "1px" }}>
+        <div className="proconxw">
           {products.map((product) => {
             const productId = product._id; // Declare the productId variable
             return (
@@ -54,17 +54,17 @@ export default function Homeproduct() {
 function ProductCard({ product }) {
   return (
     <>
-      <div className="product-cardx">
-        <div className="product-badgex">
+      <div className="product-cardxw">
+        <div className="product-badgexw">
           <h1>saurah</h1>
         </div>
         <img
           src={product.imageUrl}
           alt={product.name}
-          className="product-imagekk"
+          className="product-imagekkw"
         />
-        <div className="product-detailsx">
-          <p className="product-sizex">
+        <div className="product-detailsxw">
+          <p className="product-sizexw">
             <label htmlFor="size">Choose a size:</label>
             <select
               name="size"
@@ -78,7 +78,7 @@ function ProductCard({ product }) {
               ))}
             </select>
           </p>
-          <h3 className="product-namex">{product.name}</h3>
+          <h3 className="product-namexw">{product.name}</h3>
           {/* <div className="product-pricex">₹{product.price}</div> */}
           <div
             className="bns"
@@ -90,8 +90,8 @@ function ProductCard({ product }) {
             }}
           >
             {" "}
-            <button className="add-to-cartx">Add to cart</button>
-            <button className="add-to-cartx">Buy now</button>
+            <button className="add-to-cartxw">Add to cart</button>
+            <button className="add-to-cartxw">Buy now</button>
           </div>
         </div>
       </div>

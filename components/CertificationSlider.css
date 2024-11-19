@@ -1,0 +1,33 @@
+.slider-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 20px;
+  position: relative;
+}
+
+.slider {
+  display: flex;
+  width: max-content;
+  animation: slide 10s linear infinite;
+}
+
+.slider-item {
+  flex: 0 0 auto;
+  width: auto;
+  margin-right: 10px; /* Add spacing between images if needed */
+}
+
+.slider img {
+  max-width: 100%;
+  display: block;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-20%);
+  }
+}

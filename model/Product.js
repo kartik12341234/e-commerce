@@ -15,6 +15,22 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    ingredients: {
+      type: String,
+      // required: true,
+    },
+    ingredients: {
+      type: String,
+      // required: true,
+    },
+    ingredients: {
+      type: String,
+      // required: true,
+    },
+    ingredients: {
+      type: String,
+      // required: true,
+    },
     Benefits: {
       type: String,
       required: true,

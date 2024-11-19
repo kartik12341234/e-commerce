@@ -263,7 +263,7 @@ export default function Header() {
 
                 {/* Logo */}
                 <div className="ml-4 flex lg:ml-0">
-                  <a href="#">
+                  <a href="/">
                     <span className="sr-only">Your Company</span>
                     <img alt="" src="file.svg" className="h-8 w-auto" />
                   </a>
