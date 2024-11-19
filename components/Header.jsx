@@ -93,10 +93,10 @@ export default function Header() {
 
                 {/* Logo */}
                 <div className="ml-4 flex lg:ml-0">
-                  <a href="/">
+                  <Link src="/">
                     <span className="sr-only">Your Company</span>
                     <img src="file.svg" alt="" className="h-8 w-auto" />
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Flyout menus */}
@@ -134,12 +134,12 @@ export default function Header() {
                                           className="object-cover"
                                         />
                                       </div>
-                                      <a
-                                        href={item.href}
+                                      <Link
+                                        src={item.href}
                                         className="mt-6 block font-medium text-gray-900"
                                       >
                                         {item.name}
-                                      </a>
+                                      </Link>
                                     </div>
                                   ))}
                                 </div>
