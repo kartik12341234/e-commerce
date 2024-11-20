@@ -187,14 +187,14 @@ export default function Header() {
                       }}
                     >
                       <Link href="/allproduct">
-                        <h2 style={{ color: "#2d3748;" }}>All Product</h2>
+                        <h6 style={{ color: "#2d3748;" }}>All Product</h6>
                       </Link>
-                      <h2 style={{ color: "#2d3748;" }}>About us </h2>
-                      <h2 style={{ color: "#2d3748;" }}>contact-us</h2>
-                      <h2 style={{ color: "#2d3748;" }}>Brands</h2>
-                      <h2 style={{ color: "#2d3748;" }}>Stores</h2>
+                      <h6 style={{ color: "#2d3748;" }}>About us </h6>
+                      <h6 style={{ color: "#2d3748;" }}>contact-us</h6>
+                      <h6 style={{ color: "#2d3748;" }}>Brands</h6>
+                      <h6 style={{ color: "#2d3748;" }}>Stores</h6>
                       <Link href={"/register"}>
-                        <h2 style={{ color: "#2d3748;" }}>Login</h2>
+                        <h6 style={{ color: "#2d3748;" }}>Login</h6>
                       </Link>
                     </div>
                   </div>
