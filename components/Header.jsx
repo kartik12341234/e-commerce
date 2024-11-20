@@ -186,7 +186,9 @@ export default function Header() {
                         justifyContent: "space-between",
                       }}
                     >
-                      <h2 style={{ color: "#2d3748;" }}>All Product</h2>
+                      <Link href="/allproduct">
+                        <h2 style={{ color: "#2d3748;" }}>All Product</h2>
+                      </Link>
                       <h2 style={{ color: "#2d3748;" }}>About us </h2>
                       <h2 style={{ color: "#2d3748;" }}>contact-us</h2>
                       <h2 style={{ color: "#2d3748;" }}>Brands</h2>

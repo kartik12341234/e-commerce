@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 import "./pq.css";
+import Pl from "@/components/Pl";
 export default function Page() {
   const [products, setProducts] = useState([]);
 
@@ -33,6 +34,7 @@ export default function Page() {
         alignItems: "center",
       }}
     >
+      <Pl />
       <div className="ti">
         <h1>Best Sellers</h1>
       </div>
