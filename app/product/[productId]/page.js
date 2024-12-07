@@ -1,18 +1,30 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import "./des.css"; // Import the CSS file for styling
-import { Button } from "@headlessui/react";
-// import Review from "@/model/review";
 import CustomerReviews from "@/components/Review";
 import Know from "@/components/know";
 import OilsTable from "@/components/OilsTable";
+import Homeproduct from "@/components/Homeproduct";
+import Wr from "@/components/Wr";
 
 export default function Page({ params }) {
   const route = useRouter();
-  const { productId } = params; // Destructure productId from params directly
+  const reviewSectionRef = useRef(null);
+
+  const handleScrollToReviews = () => {
+    if (reviewSectionRef.current) {
+      reviewSectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  };
+
+  // State to manage productId
+  const [productId, setProductId] = useState(null);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,12 +42,21 @@ export default function Page({ params }) {
       alert("Please select a product size before proceeding.");
       return;
     }
-    console.log("Buying:", selectedOption, quantity);
     route.push(
       `/checkout/${productId}?selectedSize=${selectedOption._id}&quantity=${quantity}`
     );
   };
 
+  // Unwrapping the Promise-based params
+  useEffect(() => {
+    const fetchParams = async () => {
+      const resolvedParams = await params;
+      setProductId(resolvedParams.productId);
+    };
+    fetchParams();
+  }, [params]);
+
+  // Fetch product details when productId is available
   useEffect(() => {
     if (!productId) return;
 
@@ -56,6 +77,8 @@ export default function Page({ params }) {
   const toggleSection = (section) => {
     setSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
+
+  const number = Math.floor(Math.random() * 85) + 1;
 
   const handleOptionChange = (size) => {
     setSelectedOption(size);
@@ -93,9 +116,25 @@ export default function Page({ params }) {
           {/* Product Details */}
           <div className="product-details">
             <h1 className="product-name">{product?.name}</h1>
-            {/* <h1 className="product-name">{product?.price}</h1> */}
+            <h1 className="product-nam">
+              ⭐⭐⭐⭐⭐ <span>{number} reviews</span>
+            </h1>
+
+            <h1 className="product-nam" onClick={handleScrollToReviews}>
+              <span
+                style={{
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  color: "grey",
+                }}
+              >
+                see all reviews
+              </span>
+            </h1>
             {selectedOption ? (
-              <h1 className="product-price">Price: ₹{selectedOption.price}</h1>
+              <h1 className="product-price">
+                Price: ₹{selectedOption.price * quantity}
+              </h1>
             ) : (
               <h1 className="product-price">Select a size to see the price</h1>
             )}
@@ -235,8 +274,15 @@ export default function Page({ params }) {
           {sections.storageInfo && <p>{product?.storageinfo}</p>}
         </div>
       </div>
-      <CustomerReviews></CustomerReviews>
+
+      <div className="msa" ref={reviewSectionRef}>
+        <CustomerReviews></CustomerReviews>
+      </div>
       <OilsTable></OilsTable>
+      <div className="cin" style={{ marginTop: "150px" }}>
+        <Homeproduct></Homeproduct>
+      </div>
+
       <Know></Know>
       {/* <CertificationSlider></CertificationSlider> */}
     </>

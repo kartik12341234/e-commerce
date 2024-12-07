@@ -156,6 +156,14 @@
   display: flex;
   flex-wrap: wrap;
 }
+.size-option.selected {
+  background-color: #00574b;
+  color: #fff;
+  border-color: #00574b;
+  border-color: #000;
+  /* color: #000; */
+  /* color: white; */
+}
 
 .size-option {
   border: 1px solid #ccc;

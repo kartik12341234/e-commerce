@@ -19,6 +19,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { LogIn, Search, ShoppingBag } from "lucide-react";
 
 const navigation = {
   categories: [
@@ -186,15 +187,31 @@ export default function Header() {
                         justifyContent: "space-between",
                       }}
                     >
+                      <Link href="/items">
+                        <h6 style={{ color: "#2d3748;" }}>Categories</h6>
+                      </Link>
                       <Link href="/allproduct">
                         <h6 style={{ color: "#2d3748;" }}>All Product</h6>
                       </Link>
                       <h6 style={{ color: "#2d3748;" }}>About us </h6>
+                      <h6 style={{ color: "#2d3748;" }}>About us </h6>
                       <h6 style={{ color: "#2d3748;" }}>contact-us</h6>
-                      <h6 style={{ color: "#2d3748;" }}>Brands</h6>
+                      {/* <h6 style={{ color: "#2d3748;" }}>Brands</h6> */}
                       <h6 style={{ color: "#2d3748;" }}>Stores</h6>
                       <Link href={"/register"}>
-                        <h6 style={{ color: "#2d3748;" }}>Login</h6>
+                        <h6 style={{ color: "#2d3748;" }}>
+                          <Search></Search>
+                        </h6>
+                      </Link>
+                      <Link href={"/register"}>
+                        <h6 style={{ color: "#2d3748;" }}>
+                          <LogIn></LogIn>
+                        </h6>
+                      </Link>
+                      <Link href={"/cart"}>
+                        <h6 style={{ color: "#2d3748;" }}>
+                          <ShoppingBag></ShoppingBag>
+                        </h6>
                       </Link>
                     </div>
                   </div>

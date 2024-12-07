@@ -109,13 +109,13 @@ const Headerphone = () => {
 
         {/* Desktop Navigation */}
         <nav className="nav">
-          <Link href="/main" className="nav-item">
+          <Link href="/" className="nav-item">
             <House color="#fff" />
           </Link>
-          <Link href="/dashboard" className="nav-item">
+          <Link href="/items" className="nav-item">
             <Store color="#fff" />
           </Link>
-          <Link href="/community" className="nav-item">
+          <Link href="/allproduct" className="nav-item">
             <Puzzle color="#fff" />
           </Link>
           <Link href="/create" className="nav-item">

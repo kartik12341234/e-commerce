@@ -1,3 +1,4 @@
+"use client";
 import React, { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
@@ -8,7 +9,12 @@ import {
 } from "./EmblaCarouselArrowButtons";
 
 const EmblaCarousel = (props) => {
-  const slides = ["file.svg", "file.svg", "file.svg", "file.svg"];
+  const slides = [
+    "https://www.anveshan.farm/cdn/shop/files/diwali-banner-box.jpg?v=1728889762&width=2100",
+    "https://www.anveshan.farm/cdn/shop/files/diwali-banner-box.jpg?v=1728889762&width=2100",
+    "https://www.anveshan.farm/cdn/shop/files/diwali-banner-box.jpg?v=1728889762&width=2100",
+    "https://www.anveshan.farm/cdn/shop/files/diwali-banner-box.jpg?v=1728889762&width=2100",
+  ];
 
   const { options } = props;
   const [emblaRef, emblaApi] = useEmblaCarousel(options, [

@@ -92,7 +92,7 @@ export default function Footer() {
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
-                      Documentation
+                      Lab test
                     </a>
                   </li>
                   <li>

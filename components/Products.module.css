@@ -12,6 +12,7 @@
 
 /* Styling for individual product cards */
 .card {
+  height: 500px;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 10px;

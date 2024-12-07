@@ -19,10 +19,6 @@ const IconMenu = () => {
       src: "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60",
       label: "Deals",
     },
-    {
-      src: "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60",
-      label: "Superfoods",
-    },
 
     {
       src: "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60",
@@ -38,15 +34,34 @@ const IconMenu = () => {
     <div
       style={{
         display: "flex",
-        gap: "20px",
-        justifyContent: "center",
+
+        justifyContent: "space-evenly",
         alignItems: "center",
         padding: "20px",
       }}
     >
       {icons.map((icon, index) => (
-        <div key={index} style={{ textAlign: "center" }}>
-          <img src={icon.src} alt={icon.label} width={60} height={60} />
+        <div
+          key={index}
+          style={{
+            textAlign: "center",
+            display: "flex",
+
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={icon.src}
+            alt={icon.label}
+            width={60}
+            height={60}
+            style={{
+              border: "1px solid red",
+              borderRadius: "50%",
+              padding: "3px",
+            }}
+          />
           <p style={{ marginTop: "10px", fontSize: "14px" }}>{icon.label}</p>
         </div>
       ))}
