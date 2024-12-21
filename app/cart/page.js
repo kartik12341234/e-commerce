@@ -7,7 +7,9 @@ const Page = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const useremail = localStorage.getItem("loginid");
+  if (typeof window !== "undefined") {
+    useremail = localStorage.getItem("loginid");
+  }
 
   useEffect(() => {
     // Fetch cart items from the API

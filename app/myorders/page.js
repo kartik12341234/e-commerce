@@ -8,7 +8,9 @@ export default function Page() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const useremail = localStorage.getItem("loginid");
+      if (typeof window !== "undefined") {
+        useremail = localStorage.getItem("loginid");
+      }
       try {
         const response = await axios.get(`/api/myorder/${useremail}`);
         const ordersWithImages = await Promise.all(
