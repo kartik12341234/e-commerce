@@ -10,13 +10,9 @@
 
 .proconxw {
   display: flex;
-  flex-wrap: wrap;
   gap: 20px;
   padding: 0 20px; /* Add padding for spacing */
-  /* overflow-x: auto; Enable horizontal scroll */
-  /* scroll-behavior: smooth; */
-  /* -ms-overflow-style: none; IE and Edge */
-  /* scrollbar-width: none; Firefox */
+  flex-wrap: wrap;
 }
 
 .product-cardxw {
@@ -29,6 +25,7 @@
   padding: 16px;
   text-align: center;
   flex: 0 0 auto; /* Allow scrolling */
+  scroll-snap-align: start; /* Align items to the start */
 }
 
 .product-badgexw {
@@ -89,5 +86,10 @@
 
   .product-imagekkw {
     height: 180px;
+  }
+
+  /* Ensure scrolling is applied for mobile */
+  .product-listxw {
+    overflow-x: auto;
   }
 }

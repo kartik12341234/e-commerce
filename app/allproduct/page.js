@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
 import "./pq.css";
 import Pl from "@/components/Pl";
+import { useRouter } from "next/navigation";
+
 export default function Page() {
   const [products, setProducts] = useState([]);
 
@@ -12,8 +13,8 @@ export default function Page() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("/api/admin/product");
-        const productsData = response.data.products.slice(0, 8); // Only get the first 4 products
-        setProducts(productsData); // Set only the first 4 products
+        const productsData = response.data.products.slice(0, 1000); // Only get the first 8 products
+        setProducts(productsData);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -29,7 +30,6 @@ export default function Page() {
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        // marginTop: "-100px",
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -41,11 +41,11 @@ export default function Page() {
       <div className="product-listxw" style={{ marginTop: "1px" }}>
         <div className="proconxw">
           {products.map((product) => {
-            const productId = product._id; // Declare the productId variable
+            const productId = product._id;
             return (
-              <Link key={productId} href={`/product/${productId}`}>
+              <div key={productId}>
                 <ProductCard product={product} />
-              </Link>
+              </div>
             );
           })}
         </div>
@@ -53,50 +53,82 @@ export default function Page() {
     </div>
   );
 }
+
 function ProductCard({ product }) {
+  const route = useRouter();
+  const [cartItems, setCartItems] = useState({
+    useremail: localStorage.getItem("loginid"),
+    productId: product._id,
+    productName: product.name,
+    price: product.sizes[0].price,
+  });
+
+  const addtocart = (e) => {
+    e.preventDefault(); // Prevents the default link navigation behavior
+    // You can now perform the "Add to Cart" functionality
+    axios
+      .post(`/api/mycart/${cartItems.useremail}`, cartItems)
+      .then((response) => {
+        console.log("Cart updated:", response);
+      })
+      .catch((error) => {
+        console.error("Error adding to cart:", error);
+      });
+  };
+
   return (
-    <>
-      <div className="product-cardxw">
-        <div className="product-badgexw">
-          <h1>saurah</h1>
-        </div>
-        <img
-          src={product.imageUrl}
-          alt={product.name}
-          className="product-imagekkw"
-        />
-        <div className="product-detailsxw">
-          <p className="product-sizexw">
-            <label htmlFor="size">Choose a size:</label>
-            <select
-              name="size"
-              id="size"
-              style={{ borderBottom: "1px solid black" }}
-            >
-              {product.sizes.map((size) => (
-                <option key={size._id} value={size.size}>
-                  {size.size} - ₹{size.price}
-                </option>
-              ))}
-            </select>
-          </p>
-          <h3 className="product-namexw">{product.name}</h3>
-          {/* <div className="product-pricex">₹{product.price}</div> */}
-          <div
-            className="bns"
-            style={{
-              marginTop: "20px",
-              display: "flex",
-              gap: "10px",
-              flexDirection: "column",
+    <div className="product-cardxw">
+      <img
+        src={product.imageUrl}
+        alt={product.name}
+        className="product-imagekkw"
+      />
+      <div className="product-detailsxw">
+        <p className="product-sizexw">
+          <label htmlFor="size">Choose a size:</label>
+          <select
+            name="size"
+            id="size"
+            style={{ borderBottom: "1px solid black" }}
+            onChange={(e) =>
+              setCartItems({
+                ...cartItems,
+                price: product.sizes.find(
+                  (size) => size.size === e.target.value
+                ).price,
+              })
+            }
+          >
+            {product.sizes.map((size) => (
+              <option key={size._id} value={size.size}>
+                {size.size} - ₹{size.price}
+              </option>
+            ))}
+          </select>
+        </p>
+        <h3 className="product-namexw">{product.name}</h3>
+        <div
+          className="bns"
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            gap: "10px",
+            flexDirection: "column",
+          }}
+        >
+          <button className="add-to-cartxw" onClick={addtocart}>
+            Add to cart
+          </button>
+          <button
+            className="add-to-cartxw"
+            onClick={() => {
+              route.push(`/product/${product._id}`);
             }}
           >
-            {" "}
-            <button className="add-to-cartxw">Add to cart</button>
-            <button className="add-to-cartxw">Buy now</button>
-          </div>
+            Buy now
+          </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

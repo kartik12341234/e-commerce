@@ -2,6 +2,7 @@
 import { useState } from "react";
 import styles from "./Products.module.css";
 import SmallBox from "./SmallBox";
+import { ShoppingBag } from "lucide-react";
 
 const products = [
   {
@@ -102,8 +103,8 @@ export default function ProductPage() {
                   src={product.src}
                   alt={product.name}
                   style={{
-                    width: "50px",
-                    height: "50px",
+                    width: "65px",
+                    height: "65px",
                     objectFit: "cover",
                     borderRadius: "5px",
                     marginRight: "10px",
@@ -120,43 +121,53 @@ export default function ProductPage() {
                     {product.name}
                   </h3>
                   <p
-                    style={{ margin: "0", color: "#4CAF50", fontSize: "16px" }}
+                    style={{
+                      margin: "0",
+                      color: "#2a431c",
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                    }}
                   >
                     {product.price}
                   </p>
                 </div>
               </div>
-              <button
-                style={{
-                  marginTop: "10px",
-                  width: "100%",
-                  padding: "10px",
-                  backgroundColor: "#4CAF50",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                Add to Cart
+              <div className="gre" style={{ display: "flex" }}>
+                <button
+                  style={{
+                    marginTop: "10px",
+                    width: "100%",
+                    padding: "10px",
+                    backgroundColor: "#2a431c",
+                    color: "#ffffff",
+
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  Add to Cart
+                </button>
                 <span
                   style={{
-                    marginLeft: "5px",
+                    padding: "7px",
+                    backgroundColor: "#2a431c",
+                    marginLeft: "15px",
+                    marginTop: "17px",
                     display: "inline-block",
-                    width: "16px",
-                    height: "16px",
-                    backgroundImage:
-                      'url("https://www.svgrepo.com/show/200086/shopping-cart.svg")',
-                    backgroundSize: "contain",
-                    backgroundRepeat: "no-repeat",
+                    height: "40px",
+                    borderRadius: "5px",
+                    width: "40px",
                   }}
-                ></span>
-              </button>
+                >
+                  <ShoppingBag color="white"></ShoppingBag>
+                </span>
+              </div>
             </div>
           </div>
         ))}
@@ -170,7 +181,13 @@ export default function ProductPage() {
               <source src={selectedProduct.videoSrc} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            <h2 style={{ textAlign: "center", fontWeight: "500" }}>
+            <h2
+              style={{
+                textAlign: "center",
+                fontWeight: "500",
+                textDecoration: "underline",
+              }}
+            >
               {selectedProduct.name}
             </h2>
             <p>{selectedProduct.desc}</p>

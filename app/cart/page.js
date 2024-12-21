@@ -1,15 +1,19 @@
 "use client";
+import { Button } from "@headlessui/react";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const Page = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
+  const useremail = localStorage.getItem("loginid");
 
   useEffect(() => {
     // Fetch cart items from the API
     const fetchCartItems = async () => {
       try {
-        const response = await fetch("/api/id/cart"); // Replace with your API endpoint
+        const response = await fetch(`/api/mycart/${useremail}`); // Replace with your API endpoint
         const data = await response.json();
 
         if (response.ok) {
@@ -28,25 +32,54 @@ const Page = () => {
   }, []);
 
   // Determine what to display
-  const itemsToDisplay = cartItems.length === 0 ? ["0 items"] : cartItems;
+  const itemsToDisplay =
+    cartItems.length === 0 ? ["Your cart looks empty"] : cartItems;
 
   return (
     <div className="cart-container">
-      <h1 className="cart-title">Your Cart</h1>
+      {cartItems.length === 0 ? <p>Your cart is empty</p> : <p>Your cart</p>}
       {isLoading ? (
         <p>Loading...</p>
       ) : (
         itemsToDisplay.map((item, index) => (
           <div className="cart-item" key={index}>
             {typeof item === "string" ? (
-              <p className="empty-cart">{item}</p> // For "0 items"
+              <>
+                {" "}
+                <button
+                  onClick={() => router.push("/allproduct")}
+                  style={{
+                    width: "200px",
+                    height: "40px",
+                    marginTop: "20px",
+                    backgroundColor: "black",
+                    color: "white",
+                    borderRadius: "8px",
+                  }}
+                >
+                  {" "}
+                  Continue Shopping
+                </button>
+              </>
             ) : (
               <>
-                <h3>{item.name}</h3>
+                <h3>{item.productName}</h3>
                 <p>Price: ₹{item.price}</p>
-                <p>Quantity: {item.quantity}</p>
+                <p>Quantity: 1</p>
               </>
             )}
+            <button
+              style={{
+                backgroundColor: "black",
+                color: "white",
+                marginTop: "20px",
+                borderRadius: "8px",
+                width: "200px",
+                height: "40px",
+              }}
+            >
+              Buy now
+            </button>
           </div>
         ))
       )}
@@ -56,8 +89,7 @@ const Page = () => {
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: center;
-          background-color: #f9f9f9;
+
           min-height: 100vh;
         }
         .cart-title {
@@ -69,7 +101,7 @@ const Page = () => {
           padding: 1rem;
           border: 1px solid #ddd;
           border-radius: 8px;
-          background-color: #fff;
+
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
           margin-bottom: 1rem;
           width: 100%;
@@ -91,6 +123,15 @@ const Page = () => {
           color: #777;
         }
       `}</style>
+      <>
+        <h1>have an account ?</h1>
+        <p onClick={() => router.push("/login")} style={{ cursor: "pointer" }}>
+          <span style={{ color: "blue", textDecoration: "underline" }}>
+            Login
+          </span>{" "}
+          to checkout faster !{" "}
+        </p>
+      </>
     </div>
   );
 };

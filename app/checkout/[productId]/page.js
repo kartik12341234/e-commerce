@@ -54,6 +54,7 @@ export default function CheckoutForm({ params }) {
     const { name, value } = e.target;
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
+  const useremail = localStorage.getItem("loginid");
 
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -64,6 +65,7 @@ export default function CheckoutForm({ params }) {
     try {
       const response = await axios.post("/api/buy/checkout", {
         userInfo,
+        useremail,
         productId,
         product: product.name,
         quantity,

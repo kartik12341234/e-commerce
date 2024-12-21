@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import axios from "axios";
 import "./des.css"; // Import the CSS file for styling
 import CustomerReviews from "@/components/Review";
@@ -9,6 +10,8 @@ import Know from "@/components/know";
 import OilsTable from "@/components/OilsTable";
 import Homeproduct from "@/components/Homeproduct";
 import Wr from "@/components/Wr";
+import ProductPage from "@/components/Productpage";
+import Pl from "@/components/Pl";
 
 export default function Page({ params }) {
   const route = useRouter();
@@ -36,7 +39,18 @@ export default function Page({ params }) {
     benefits: false,
     storageInfo: false,
   });
-
+  const [cartItems, setCartItems] = useState({
+    useremail: localStorage.getItem("loginid"),
+    productId,
+    productName: product,
+    price: "price",
+  });
+  const addtocart = () => {
+    setCartItems(cartItems);
+    console.log(cartItems);
+    const response = axios.post(`/api/mycart/${useremail}`, cartItems).then;
+    console.log(response);
+  };
   const buy = () => {
     if (!selectedOption) {
       alert("Please select a product size before proceeding.");
@@ -102,27 +116,76 @@ export default function Page({ params }) {
 
   return (
     <>
+      <Pl></Pl>
       <div className="containerp">
         <div className="grid">
           {/* Product Image */}
-          <div className="flex justify-center items-center">
-            <img
-              src={product?.imageUrl}
-              alt={product?.name}
-              className="product-image"
-            />
+          <div
+            className="bio"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "auto",
+              gap: "10px",
+            }}
+          >
+            <div className="lesh" style={{ marginLeft: "-30px" }}>
+              {" "}
+              {/* Additional Images Section */}
+              {product?.additionalImages &&
+                product?.additionalImages.length > 0 && (
+                  <div className="additional-images">
+                    <div className="additional-images-container">
+                      {product.additionalImages.map((imageUrl, index) => (
+                        <img
+                          key={index}
+                          src={imageUrl}
+                          alt={`Additional image ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+            </div>
+            <div className="product-image-container">
+              <img
+                src={product?.imageUrl}
+                alt={product?.name}
+                className="product-image"
+              />
+            </div>
           </div>
 
           {/* Product Details */}
           <div className="product-details">
-            <h1 className="product-name">{product?.name}</h1>
-            <h1 className="product-nam">
-              ⭐⭐⭐⭐⭐ <span>{number} reviews</span>
+            <h1 className="product-name" style={{ marginTop: "20px" }}>
+              {product?.name}
             </h1>
+            <div
+              className="fdgshj"
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <h1 className="product-nam" style={{ marginTop: "20px" }}>
+                ⭐⭐⭐⭐⭐ <span>{number} reviews</span>
+              </h1>
+              {selectedOption ? (
+                <h1 className="product-price" style={{ marginTop: "10px" }}>
+                  Price: ₹{selectedOption.price * quantity}
+                  <span style={{ fontSize: "8px", color: "grey" }}>
+                    MRP (Incl. of all taxes)
+                  </span>
+                </h1>
+              ) : (
+                <h1 className="product-price">
+                  Select a size to see the price
+                </h1>
+              )}
+            </div>
 
             <h1 className="product-nam" onClick={handleScrollToReviews}>
               <span
                 style={{
+                  marginBottom: "-10px",
                   cursor: "pointer",
                   textDecoration: "underline",
                   color: "grey",
@@ -131,13 +194,40 @@ export default function Page({ params }) {
                 see all reviews
               </span>
             </h1>
-            {selectedOption ? (
-              <h1 className="product-price">
-                Price: ₹{selectedOption.price * quantity}
-              </h1>
-            ) : (
-              <h1 className="product-price">Select a size to see the price</h1>
-            )}
+            <div className="showimg" style={{ display: "flex", gap: "50px" }}>
+              <img
+                src={
+                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
+                }
+                width={100}
+                height={100}
+                alt="Image"
+              ></img>
+              <img
+                src={
+                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
+                }
+                width={100}
+                height={100}
+                alt="Image"
+              ></img>
+              <img
+                src={
+                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
+                }
+                width={100}
+                height={100}
+                alt="Image"
+              ></img>
+              <img
+                src={
+                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
+                }
+                width={100}
+                height={100}
+                alt="Image"
+              ></img>
+            </div>
 
             {/* Sizes Section */}
             <div className="size-section" style={{ justifyContent: "center" }}>
@@ -150,12 +240,36 @@ export default function Page({ params }) {
                     }`}
                     onClick={() => handleOptionChange(size)}
                   >
-                    <span className="size-name">{size.size} jar</span>
-                    <span className="size-price">₹{size.price}</span>
-                    <span className="size-off">10% off</span>
-                    <span className="price-per-liter">
-                      ₹{(size.price / parseInt(size.size)).toFixed(2)}/L
-                    </span>
+                    <div
+                      className="high"
+                      style={{
+                        borderBottom: "1px solid black",
+                        backgroundColor:
+                          selectedOption?._id === size._id
+                            ? "#00584b"
+                            : "#ece9e98e",
+                      }}
+                    >
+                      <span className="size-name">{size.size} jar</span>
+                    </div>
+                    <div
+                      className="hyj"
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "10px",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {" "}
+                      <span className="size-price" style={{ color: "black" }}>
+                        ₹{size.price}
+                      </span>
+                      <span className="size-price" style={{ color: "black" }}>
+                        ₹{size.price / 1000}/ ml
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -188,12 +302,13 @@ export default function Page({ params }) {
                 justifyContent: "center",
                 cursor: "pointer",
               }}
+              onClick={addtocart}
             >
               <button className="button add-to-cart">Add to Cart</button>
               <button
                 style={{
                   cursor: "pointer",
-                  backgroundColor: "red",
+                  backgroundColor: "#00574b",
                   color: "white",
                 }}
                 className="button buy-now"
@@ -217,7 +332,7 @@ export default function Page({ params }) {
         </div>
 
         {/* Additional Images Section */}
-        {product?.additionalImages && product?.additionalImages.length > 0 && (
+        {/* {product?.additionalImages && product?.additionalImages.length > 0 && (
           <div className="additional-images">
             <div className="additional-images-container">
               {product.additionalImages.map((imageUrl, index) => (
@@ -229,7 +344,7 @@ export default function Page({ params }) {
               ))}
             </div>
           </div>
-        )}
+        )} */}
         <div className="collapsible-section">
           <div
             className="section-header"

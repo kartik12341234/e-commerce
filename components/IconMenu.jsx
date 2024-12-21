@@ -1,5 +1,5 @@
 "use client";
-// import Image from "next/image";
+import { motion } from "framer-motion";
 
 const IconMenu = () => {
   const icons = [
@@ -34,36 +34,45 @@ const IconMenu = () => {
     <div
       style={{
         display: "flex",
-
-        justifyContent: "space-evenly",
+        gap: "30px",
+        justifyContent: "center",
         alignItems: "center",
         padding: "20px",
       }}
     >
       {icons.map((icon, index) => (
-        <div
+        <motion.div
           key={index}
+          whileHover={{ scale: 1.2, rotate: 10 }} // Slight pop & rotate on hover
+          whileTap={{ scale: 0.9 }} // Shrink effect on click
+          animate={{ y: [0, -10, 0] }} // Smooth floating effect
+          transition={{
+            repeat: Infinity,
+            duration: 2,
+            ease: "easeInOut",
+          }}
           style={{
             textAlign: "center",
             display: "flex",
-
             flexDirection: "column",
             alignItems: "center",
           }}
         >
-          <img
+          <motion.img
             src={icon.src}
             alt={icon.label}
             width={60}
             height={60}
             style={{
-              border: "1px solid red",
+              border: "2px solid red",
               borderRadius: "50%",
               padding: "3px",
             }}
+            whileHover={{ boxShadow: "0 0 10px rgba(255, 0, 0, 0.8)" }} // Highlight with shadow
+            transition={{ duration: 0.3 }}
           />
           <p style={{ marginTop: "10px", fontSize: "14px" }}>{icon.label}</p>
-        </div>
+        </motion.div>
       ))}
     </div>
   );

@@ -55,3 +55,16 @@
   display: flex;
   justify-content: center;
 }
+@media screen and (max-width: 768px) {
+  .features {
+    display: grid; /* Use grid layout for better control */
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 20px; /* Space between items */
+    justify-items: center; /* Center items horizontally */
+  }
+
+  .feature-item {
+    width: 100%; /* Ensure items fit within the grid cells */
+    max-width: 150px; /* Optional: set a max width for better alignment */
+  }
+}

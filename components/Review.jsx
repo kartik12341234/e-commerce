@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./cr.css";
 import Wr from "./Wr";
+import { User, UserCheck } from "lucide-react";
 const CustomerReviews = () => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
@@ -39,10 +40,10 @@ const CustomerReviews = () => {
 
   return (
     <>
+      <h2>Customer Reviews</h2>
       <Wr></Wr>
 
       <div className="reviews-container">
-        <h2>Customer Reviews</h2>
         <div className="review-summary">
           {/* Add a summary UI for the average rating */}
         </div>
@@ -83,8 +84,14 @@ const CustomerReviews = () => {
           {reviews.map((review) => (
             <div key={review._id} className="review">
               <div className="rating">{Array(review.rating).fill("⭐")}</div>
-              <h3>
-                {review.username} <span className="verified">Veified </span>
+              <h3 style={{ display: "flex", gap: "30px" }}>
+                <div
+                  className="dj"
+                  style={{ backgroundColor: "grey", borderRadius: "4px" }}
+                >
+                  <UserCheck color="#000"></UserCheck>{" "}
+                </div>
+                {review.username} <span className="verified">Veified ✔ </span>
                 {review.verified && <span className="verified">Verified</span>}
               </h3>
               <p>{review.comment}</p>

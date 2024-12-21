@@ -2,10 +2,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./pd.css";
 import Link from "next/link";
-import { useRouter } from "next/navigation"; // For navigation
+// import React-h
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { FaHeart } from "react-icons/fa";
 import { ShoppingBag, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Homeproduct() {
   const [products, setProducts] = useState([]);
@@ -16,7 +18,14 @@ export default function Homeproduct() {
       try {
         const response = await axios.get("/api/admin/product");
         const productsData = response.data.products.slice(0, 8);
-        setProducts(productsData);
+
+        // Add random review counts to each product
+        const productsWithReviews = productsData.map((product) => ({
+          ...product,
+          reviews: Math.floor(Math.random() * 100) + 1,
+        }));
+
+        setProducts(productsWithReviews);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -25,19 +34,20 @@ export default function Homeproduct() {
     fetchProducts();
   }, []);
 
-  // Function to scroll left
   const scrollLeft = () => {
     scrollContainerRef.current.scrollBy({ left: -250, behavior: "smooth" });
   };
 
-  // Function to scroll right
   const scrollRight = () => {
     scrollContainerRef.current.scrollBy({ left: 250, behavior: "smooth" });
   };
 
   return (
-    <div
+    <motion.div
       className="pd"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1 }}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -51,28 +61,44 @@ export default function Homeproduct() {
         <h1>Best Sellers</h1>
       </div>
       <div className="product-listx" style={{ marginTop: "1px" }}>
-        <button onClick={scrollLeft} className="scroll-button left">
+        <motion.button
+          onClick={scrollLeft}
+          className="scroll-button left"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
           &lt;
-        </button>
+        </motion.button>
         <div className="proconx" ref={scrollContainerRef}>
           {products.map((product) => {
             const productId = product._id;
             return <ProductCard key={productId} product={product} />;
           })}
         </div>
-        <button onClick={scrollRight} className="scroll-button right">
+        <motion.button
+          onClick={scrollRight}
+          className="scroll-button right"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
           &gt;
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 function ProductCard({ product }) {
+  const useremail = localStorage.getItem("loginid");
   const [isLiked, setIsLiked] = useState(false);
+  const [cartItems, setCartItems] = useState({
+    useremail: localStorage.getItem("loginid"),
+    productId: product._id,
+    productName: product.name,
+    price: product.sizes[0].price,
+  });
   const router = useRouter();
 
-  // Load the initial state from localStorage
   useEffect(() => {
     const likedProducts =
       JSON.parse(localStorage.getItem("likedProducts")) || [];
@@ -81,29 +107,36 @@ function ProductCard({ product }) {
     }
   }, [product._id]);
 
-  // Handle heart icon click
   const handleHeartClick = () => {
     const likedProducts =
       JSON.parse(localStorage.getItem("likedProducts")) || [];
     if (isLiked) {
-      // Remove product ID from localStorage
       const updatedProducts = likedProducts.filter((id) => id !== product._id);
       localStorage.setItem("likedProducts", JSON.stringify(updatedProducts));
     } else {
-      // Add product ID to localStorage
       likedProducts.push(product._id);
       localStorage.setItem("likedProducts", JSON.stringify(likedProducts));
     }
     setIsLiked(!isLiked);
   };
 
-  // Handle Buy Now button click
   const handleBuyNow = () => {
     router.push(`/product/${product._id}`);
   };
 
+  const addtocart = () => {
+    axios.post(`/api/mycart/${useremail}`, cartItems);
+    alert("Product added to cart!");
+  };
+
   return (
-    <div className="product-cardx">
+    <motion.div
+      className="product-cardx"
+      whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(0,0,0,0.2)" }}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="product-badgex">
         <h1>Best Seller</h1>
         <FaHeart
@@ -119,10 +152,13 @@ function ProductCard({ product }) {
         src={product.imageUrl}
         alt={product.name}
         className="product-imagekk"
+        onClick={handleBuyNow}
       />
       <div className="product-detailsx">
         <p className="product-sizex">
-          <label htmlFor="size">Choose a size:</label>
+          <label htmlFor="size" style={{ color: "black" }}>
+            Choose a size:
+          </label>
           <select
             name="size"
             id="size"
@@ -135,7 +171,11 @@ function ProductCard({ product }) {
             ))}
           </select>
         </p>
-        <h3 className="product-namex">{product.name}</h3>
+        <h3 className="product-namex" onClick={handleBuyNow}>
+          {product.name}
+        </h3>
+        ⭐⭐⭐⭐⭐
+        <span style={{ fontSize: "15px" }}>{product.reviews} reviews</span>
         <div
           className="bns"
           style={{
@@ -146,21 +186,26 @@ function ProductCard({ product }) {
           }}
         >
           <button
+            onClick={addtocart}
             className="add-to-cartx"
-            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+            }}
           >
-            {" "}
-            <ShoppingBag></ShoppingBag> Add to cart
+            <ShoppingBag /> Add to cart
           </button>
           <button
             className="add-to-cartx"
             style={{ display: "flex", justifyContent: "center", gap: "10px" }}
             onClick={handleBuyNow}
           >
-            <Zap></Zap> Buy now
+            <Zap /> Buy now
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

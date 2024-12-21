@@ -19,7 +19,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { LogIn, Search, ShoppingBag } from "lucide-react";
+import { Heart, LogIn, Search, ShoppingBag, UserPen } from "lucide-react";
 
 const navigation = {
   categories: [
@@ -72,6 +72,46 @@ const navigation = {
 };
 
 export default function Header() {
+  const dropdownData = {
+    Categories: [
+      { name: "Fruits", path: "/items" },
+      { name: "Vegetables", path: "/categories/vegetables" },
+      { name: "Spices", path: "/categories/spices" },
+      { name: "Grains", path: "/categories/grains" },
+    ],
+    "All Product": [
+      { name: "Ghee", path: "/products" },
+      { name: "Oils", path: "/products/oils" },
+      { name: "Millets", path: "/products/millets" },
+      { name: "Deals", path: "/products/deals" },
+    ],
+    "About us": [
+      { name: "Company Info", path: "/about/company-info" },
+      { name: "Our Team", path: "/about/our-team" },
+      { name: "Mission", path: "/about/mission" },
+    ],
+    "contact-us": [
+      { name: "Email", path: "/contact/email" },
+      { name: "Phone", path: "/contact/phone" },
+      { name: "Support", path: "/contact/support" },
+    ],
+    Stores: [
+      { name: "Delhi", path: "/stores/delhi" },
+      { name: "Mumbai", path: "/stores/mumbai" },
+      { name: "Bangalore", path: "/stores/bangalore" },
+      { name: "Chennai", path: "/stores/chennai" },
+    ],
+  };
+
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const handleHover = (label) => {
+    setActiveDropdown(label);
+  };
+
+  const handleLeave = () => {
+    setActiveDropdown(null);
+  };
+
   const [open, setOpen] = useState(false);
 
   return (
@@ -175,44 +215,117 @@ export default function Header() {
                       </Popover>
                     ))}
                     <div
-                      className="showing"
                       style={{
-                        marginLeft: "100px",
-                        // color: "#2d3748;",
+                        marginLeft: "150px",
                         fontWeight: "500",
                         marginTop: "20px",
-                        width: "1000px",
+                        width: "100%",
                         display: "flex",
-                        gap: "20px",
-                        justifyContent: "space-between",
+                        justifyContent: "center",
+                        gap: "160px",
                       }}
                     >
-                      <Link href="/items">
-                        <h6 style={{ color: "#2d3748;" }}>Categories</h6>
-                      </Link>
-                      <Link href="/allproduct">
-                        <h6 style={{ color: "#2d3748;" }}>All Product</h6>
-                      </Link>
-                      <h6 style={{ color: "#2d3748;" }}>About us </h6>
-                      <h6 style={{ color: "#2d3748;" }}>About us </h6>
-                      <h6 style={{ color: "#2d3748;" }}>contact-us</h6>
-                      {/* <h6 style={{ color: "#2d3748;" }}>Brands</h6> */}
-                      <h6 style={{ color: "#2d3748;" }}>Stores</h6>
-                      <Link href={"/register"}>
-                        <h6 style={{ color: "#2d3748;" }}>
-                          <Search></Search>
-                        </h6>
-                      </Link>
-                      <Link href={"/register"}>
-                        <h6 style={{ color: "#2d3748;" }}>
-                          <LogIn></LogIn>
-                        </h6>
-                      </Link>
-                      <Link href={"/cart"}>
-                        <h6 style={{ color: "#2d3748;" }}>
-                          <ShoppingBag></ShoppingBag>
-                        </h6>
-                      </Link>
+                      <div
+                        className="midshow"
+                        style={{
+                          display: "flex",
+                          gap: "30px",
+                          position: "relative",
+                        }}
+                      >
+                        {Object.keys(dropdownData).map((label) => (
+                          <div
+                            key={label}
+                            style={{ position: "relative" }}
+                            onMouseEnter={() => handleHover(label)}
+                            onMouseLeave={handleLeave}
+                          >
+                            <h6
+                              style={{
+                                color: "#2d3748",
+                                cursor: "pointer",
+                                margin: "0",
+                              }}
+                            >
+                              {label}
+                            </h6>
+                            {activeDropdown === label && (
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  top: "30px",
+                                  left: "0",
+                                  backgroundColor: "#fff",
+                                  border: "1px solid #ccc",
+                                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                                  borderRadius: "5px",
+                                  zIndex: "1000",
+                                  minWidth: "150px",
+                                  padding: "10px",
+                                }}
+                              >
+                                {dropdownData[label].map((item, index) => (
+                                  <Link href={item.path} key={index} passHref>
+                                    <p
+                                      style={{
+                                        margin: "5px 0",
+                                        fontSize: "14px",
+                                        color: "#2d3748",
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      {item.name}
+                                    </p>
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Other side of the menu */}
+                      <div
+                        className="leftsh"
+                        style={{
+                          display: "flex",
+                          gap: "30px",
+                        }}
+                      >
+                        {/* Search Box */}
+                        <div className="dii" style={{ display: "flex" }}>
+                          <input
+                            type="text"
+                            placeholder="🔍Search here"
+                            style={{
+                              width: "120px",
+                              height: "30px",
+                              border: "1px solid #2d3748",
+                              borderRadius: "0px",
+                            }}
+                          />
+                        </div>
+
+                        {/* Other Links */}
+                        <a
+                          href="/register"
+                          style={{ color: "#2d3748", cursor: "pointer" }}
+                        >
+                          <UserPen></UserPen>
+                        </a>
+                        <a
+                          href="/cart"
+                          style={{ color: "#2d3748", cursor: "pointer" }}
+                        >
+                          ❤️
+                        </a>
+                        <a
+                          href="/myorders"
+                          style={{ color: "#2d3748", cursor: "pointer" }}
+                        >
+                          🛒
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </PopoverGroup>

@@ -2,6 +2,7 @@
 import Razorpay from "razorpay";
 import { connect } from "@/config/Dbconfig";
 import order from "@/model/Order";
+import { NextResponse } from "next/server";
 // imporrt order
 
 connect();
@@ -13,12 +14,14 @@ connect();
 
 export async function POST(req) {
   try {
-    const { productId, product, quantity, price, userInfo } = await req.json();
+    const { productId, product, quantity, price, userInfo, useremail } =
+      await req.json();
     console.log(
       "Order details:",
       productId,
       product,
       quantity,
+      useremail,
       price,
       userInfo
     );
@@ -37,6 +40,7 @@ export async function POST(req) {
       productId,
       product,
       quantity,
+      useremail,
       price,
       amount,
       userInfo,
@@ -58,6 +62,21 @@ export async function POST(req) {
     console.error("Error creating Razorpay order:", error);
     return new Response(
       JSON.stringify({ message: "Error processing payment" }),
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET(req) {
+  connect();
+  try {
+    const orders = await order.find({}).sort({ _id: -1 });
+
+    return NextResponse.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    return NextResponse.json(
+      { message: "Error fetching orders.", error },
       { status: 500 }
     );
   }

@@ -19,6 +19,7 @@ function Login() {
     try {
       const response = await axios.post("/api/users/login", signup);
       console.log(response.data);
+      localStorage.setItem("loginid", signup.email);
       toast.success("Login successfully");
 
       localStorage.setItem("login", "true");

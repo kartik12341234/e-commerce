@@ -42,7 +42,7 @@ export default function Categories() {
       <h1 className="text-3xl font-semibold text-center mb-10">
         choose buy Categories
       </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-2 gap-6 max-w-4xl mx-auto px-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-6 max-w-4xl mx-auto px-4">
         {oils.map((oil, index) => (
           <div
             key={index}
@@ -51,7 +51,8 @@ export default function Categories() {
             <img
               src={oil.image}
               alt={oil.name}
-              className="w-full h-48 object-cover"
+              className="w-full h-48 obconsole.log('Categories component rendered');
+console.log('Oils array:', oils);ject-cover"
             />
             <div className="p-4">
               {/* <h2 className="text-xl font-medium text-gray-800">{oil.name}</h2> */}

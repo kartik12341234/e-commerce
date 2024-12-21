@@ -101,7 +101,7 @@ const TestimonialCard = ({ text, name, image, rating }) => {
 
 const Testimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0); // Start index
-  const itemsPerPage = 4; // Number of testimonials to show at a time
+  const itemsPerPage = 3; // Number of testimonials to show at a time
 
   const handleNext = () => {
     if (currentIndex + itemsPerPage < testimonials.length) {
@@ -138,7 +138,7 @@ const Testimonials = () => {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
-          gap: "20px",
+          gap: "100px",
         }}
       >
         {visibleTestimonials.map((testimonial, index) => (

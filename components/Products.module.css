@@ -1,17 +1,23 @@
 /* General container styling */
 .container {
   padding: 20px;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 /* Grid styling for product cards */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  display: flex; /* Change to flexbox for horizontal scrolling */
   gap: 20px;
+  flex-wrap: nowrap; /* Prevent wrapping to the next line */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  padding-bottom: 10px; /* Add some space below the cards */
 }
 
 /* Styling for individual product cards */
 .card {
+  flex: 0 0 auto; /* Prevent cards from growing or shrinking */
+  width: 250px; /* Set a fixed width for each card */
   height: 500px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -57,7 +63,6 @@
   height: 110vh;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  /* flex-direction: row; */
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -65,13 +70,11 @@
 
 /* Modal content styling */
 .modalContent {
-  background: #000;
-  color: #fff;
+  background: #fff;
+  color: #000;
   border-radius: 8px;
-  padding: 20px;
   max-width: 500px;
   width: 100%;
-  /* display: flex; */
   height: 90vh;
   text-align: center;
   position: relative;
@@ -79,6 +82,7 @@
 
 /* Video styling in the modal */
 .video {
+  background-color: #000;
   width: 100%;
   border-radius: 8px;
   height: 60vh;
@@ -87,7 +91,7 @@
 
 /* Add to Cart button styling */
 .button {
-  background-color: #4caf50;
+  background-color: #2b431c;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -119,13 +123,10 @@
 /* Responsive adjustments for small screens */
 @media (max-width: 768px) {
   .grid {
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(150px, 1fr)
-    ); /* Adjust card sizes for smaller screens */
+    grid-template-columns: none; /* Override the grid to be flexible */
   }
 
   .card {
-    padding: 8px; /* Adjust card padding */
+    width: 180px; /* Adjust card width on smaller screens */
   }
 }

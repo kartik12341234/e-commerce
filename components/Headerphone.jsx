@@ -112,13 +112,13 @@ const Headerphone = () => {
           <Link href="/" className="nav-item">
             <House color="#fff" />
           </Link>
-          <Link href="/items" className="nav-item">
+          <Link href="/allproduct" className="nav-item">
             <Store color="#fff" />
           </Link>
           <Link href="/allproduct" className="nav-item">
             <Puzzle color="#fff" />
           </Link>
-          <Link href="/create" className="nav-item">
+          <Link href="/cart" className="nav-item">
             <ShoppingCart color="#fff" />
           </Link>
           <Link href="/track" className="nav-item">
