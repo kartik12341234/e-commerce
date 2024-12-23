@@ -6,49 +6,34 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    description: {
-      type: String,
-      required: true,
-      minlength: 100,
-    },
-    ingredients: {
-      type: String,
-      required: true,
-    },
+    description: [
+      {
+        paragraph: { type: String },
+        imageUrl: { type: String },
+      },
+    ],
     ingredients: {
       type: String,
       // required: true,
     },
-    ingredients: {
+    benefits: {
       type: String,
       // required: true,
     },
-    ingredients: {
+    storageInfo: {
       type: String,
       // required: true,
-    },
-    ingredients: {
-      type: String,
-      // required: true,
-    },
-    Benefits: {
-      type: String,
-      required: true,
-    },
-    storageinfo: {
-      type: String,
-      required: true,
       minlength: 100,
     },
     sizes: [
       {
-        size: { type: String, required: true },
-        price: { type: Number, required: true },
+        size: { type: String },
+        price: { type: Number },
       },
     ],
     imageUrl: {
       type: String,
-      required: true,
+      // required: true,
     },
     additionalImages: {
       type: [String],

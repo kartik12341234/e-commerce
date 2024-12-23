@@ -42,7 +42,7 @@ export default function Page() {
 
   const [product, setProduct] = useState({
     name: "",
-    description: "",
+    description: [{ imageUrl: "", paragraph: "" }], // Ensure it's an array
     ingredients: "",
     Benefits: "",
     storageinfo: "",
@@ -53,16 +53,16 @@ export default function Page() {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [additionalImagesPreview, setAdditionalImagesPreview] = useState([]);
-  const [orders, setOrders] = useState([]);
+  // const [orders, setOrders] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  const ordershistory = axios
-    .get("/api/buy/checkout")
-    .then((res) => setOrders(res.data));
+  // const ordershistory = axios
+  //   .get("/api/buy/checkout")
+  //   .then((res) => setOrders(res.data));
 
   const handleSizeChange = (index, e) => {
     const { name, value } = e.target;
@@ -94,6 +94,22 @@ export default function Page() {
     }));
     const newPreviews = files.map((file) => URL.createObjectURL(file));
     setAdditionalImagesPreview((prev) => [...prev, ...newPreviews]);
+  };
+  const handleDescriptionChange = (index, field, e) => {
+    const { value } = e.target;
+    const updatedDescription = [...product.description];
+
+    // Update the correct field (paragraph or imageUrl)
+    updatedDescription[index][field] = value;
+
+    setProduct((prev) => ({ ...prev, description: updatedDescription }));
+  };
+
+  const addDescriptionField = () => {
+    setProduct((prev) => ({
+      ...prev,
+      description: [...prev.description, { imageUrl: "", paragraph: "" }],
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -209,19 +225,43 @@ export default function Page() {
                 required
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Description
               </label>
-              <textarea
-                name="description"
-                value={product.description}
-                onChange={handleChange}
-                rows="4"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-                required
-              />
+              {product.description.map((desc, index) => (
+                <div key={index} className="flex flex-col gap-4">
+                  {/* Textarea for paragraph */}
+                  <textarea
+                    name="paragraph" // Keep it simple for name
+                    value={desc.paragraph}
+                    onChange={(e) =>
+                      handleDescriptionChange(index, "paragraph", e)
+                    } // Pass the field name here
+                    rows="4"
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+                    required
+                  />
+                  {/* Input for image URL */}
+                  <input
+                    type="text"
+                    name="imageUrl"
+                    value={desc.imageUrl}
+                    onChange={(e) =>
+                      handleDescriptionChange(index, "imageUrl", e)
+                    } // Pass the field name here
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+                    placeholder="Image URL"
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addDescriptionField}
+                className="mt-2 text-blue-500"
+              >
+                + Add Another Description
+              </button>
             </div>
 
             <div>
@@ -312,7 +352,7 @@ export default function Page() {
       </div>
       <h1>all orders list</h1>
 
-      <div
+      {/* <div
         className="listing"
         style={{
           display: "flex",
@@ -411,7 +451,7 @@ export default function Page() {
             </div>
           );
         })}
-      </div>
+      </div> */}
 
       {/* Delivered Orders */}
     </>

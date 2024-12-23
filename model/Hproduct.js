@@ -15,30 +15,42 @@ const HproductSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    ingredients: {
+    cooking: {
       type: String,
       // required: true,
     },
-    ingredients: {
+    Skincare: {
       type: String,
       // required: true,
     },
-    ingredients: {
+    Haircare: {
       type: String,
       // required: true,
     },
-    ingredients: {
+    Wellness: {
       type: String,
       // required: true,
     },
-    Benefits: {
+    OilPulling: {
       type: String,
       required: true,
     },
-    storageinfo: {
+    shelfLife: {
       type: String,
       required: true,
-      minlength: 100,
+    },
+    WCU: {
+      type: String,
+      required: true,
+    },
+    comparison: {
+      type: String,
+      required: true,
+    },
+    MakeupRemoval: {
+      type: String,
+      required: true,
+      // minlength: 100,
     },
     sizes: [
       {

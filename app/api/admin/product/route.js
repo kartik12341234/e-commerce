@@ -21,6 +21,16 @@ export async function POST(req) {
       image,
       additionalImages,
     } = await req.json();
+    // console.log(
+    //   name,
+    //   description,
+    //   ingredients,
+    //   Benefits,
+    //   storageinfo,
+    //   sizes,
+    //   image,
+    //   additionalImages
+    // );
 
     const uploadResponse = await cloudinary.v2.uploader.upload(image, {
       folder: "organic",
@@ -39,7 +49,10 @@ export async function POST(req) {
 
     const newProduct = new Product({
       name,
-      description,
+      description: description.map((desc) => ({
+        paragraph: desc.paragraph, // Make sure each 'paragraph' is a string
+        imageUrl: desc.imageUrl, // Make sure each 'imageUrl' is a string
+      })),
       ingredients,
       Benefits,
       storageinfo,
