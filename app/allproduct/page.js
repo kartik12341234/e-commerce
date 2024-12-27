@@ -5,7 +5,8 @@ import Link from "next/link";
 import "./pq.css";
 import Pl from "@/components/Pl";
 import { useRouter } from "next/navigation";
-
+import { ShoppingBag, Zap } from "lucide-react";
+import { FaHeart } from "react-icons/fa";
 export default function Page() {
   const [products, setProducts] = useState([]);
 
@@ -116,16 +117,21 @@ function ProductCard({ product }) {
             flexDirection: "column",
           }}
         >
-          <button className="add-to-cartxw" onClick={addtocart}>
-            Add to cart
+          <button
+            className="add-to-cartxw"
+            onClick={addtocart}
+            style={{ display: "flex", justifyContent: "space-evenly" }}
+          >
+            <ShoppingBag></ShoppingBag> Add to cart
           </button>
           <button
+            style={{ display: "flex", justifyContent: "space-evenly" }}
             className="add-to-cartxw"
             onClick={() => {
               route.push(`/product/${product._id}`);
             }}
           >
-            Buy now
+            <Zap></Zap> Buy now
           </button>
         </div>
       </div>

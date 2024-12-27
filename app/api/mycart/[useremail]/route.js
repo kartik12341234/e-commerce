@@ -20,13 +20,15 @@ export async function GET(req, { params }) {
 
 export async function POST(req, res) {
   try {
-    const { useremail, productId, price, productName } = await req.json(); // Correctly parse JSON body
+    const { useremail, productId, price, productName, imageUrl } =
+      await req.json(); // Correctly parse JSON body
     await connect(); // Ensure the database connection
     const data = await cart.create({
       useremail,
       productId,
       price,
       productName,
+      imageUrl,
     });
     return NextResponse.json(data, { status: 201 });
   } catch (error) {

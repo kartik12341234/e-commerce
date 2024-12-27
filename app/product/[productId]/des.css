@@ -28,7 +28,8 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-
+.hiiio {
+}
 .product-details {
   display: flex;
   flex-direction: column;
@@ -284,6 +285,27 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+  }
+  .hiiio {
+    display: flex;
+    flex-direction: row; /* Horizontal scroll */
+    gap: 16px; /* Space between items */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 8px;
+    scrollbar-width: thin; /* Thin scrollbar for modern browsers */
+  }
+
+  .hiiio::-webkit-scrollbar {
+    height: 8px; /* Height of the scrollbar for horizontal scrolling */
+  }
+
+  .hiiio::-webkit-scrollbar-thumb {
+    background: #c4c4c4; /* Scrollbar thumb color */
+    border-radius: 4px; /* Rounded scrollbar thumb */
+  }
+
+  .hiiio::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Scrollbar track color */
   }
 
   /* Adjust product image for smaller screens */

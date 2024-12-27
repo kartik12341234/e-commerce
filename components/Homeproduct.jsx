@@ -1,13 +1,15 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import "./pd.css";
+// import { motion } from "framer-motion";
 import Link from "next/link";
 // import React-h
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { FaHeart } from "react-icons/fa";
-import { ShoppingBag, Zap } from "lucide-react";
+import { Circle, CircleX, ShoppingBag, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import Page from "@/app/cart/page";
 
 export default function Homeproduct() {
   const [products, setProducts] = useState([]);
@@ -95,6 +97,7 @@ function ProductCard({ product }) {
     useremail: localStorage.getItem("loginid"),
     productId: product._id,
     productName: product.name,
+    imageUrl: product.imageUrl,
     price: product.sizes[0].price,
   });
   const router = useRouter();
@@ -123,89 +126,121 @@ function ProductCard({ product }) {
   const handleBuyNow = () => {
     router.push(`/product/${product._id}`);
   };
-
+  const [showCart, setShowCart] = useState(false);
   const addtocart = () => {
     axios.post(`/api/mycart/${useremail}`, cartItems);
+    console.log(cartItems);
+    setShowCart(true);
     alert("Product added to cart!");
   };
 
   return (
-    <motion.div
-      className="product-cardx"
-      whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(0,0,0,0.2)" }}
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="product-badgex">
-        <h1>Best Seller</h1>
-        <FaHeart
-          onClick={handleHeartClick}
-          style={{
-            color: isLiked ? "red" : "white",
-            cursor: "pointer",
-          }}
-          size={24}
-        />
-      </div>
-      <img
-        src={product.imageUrl}
-        alt={product.name}
-        className="product-imagekk"
-        onClick={handleBuyNow}
-      />
-      <div className="product-detailsx">
-        <p className="product-sizex">
-          <label htmlFor="size" style={{ color: "black" }}>
-            Choose a size:
-          </label>
-          <select
-            name="size"
-            id="size"
-            style={{ borderBottom: "1px solid black" }}
-          >
-            {product.sizes.map((size) => (
-              <option key={size._id} value={size.size}>
-                {size.size} - ₹{size.price}
-              </option>
-            ))}
-          </select>
-        </p>
-        <h3 className="product-namex" onClick={handleBuyNow}>
-          {product.name}
-        </h3>
-        ⭐⭐⭐⭐⭐
-        <span style={{ fontSize: "15px" }}>{product.reviews} reviews</span>
-        <div
-          className="bns"
-          style={{
-            marginTop: "20px",
-            display: "flex",
-            gap: "10px",
-            flexDirection: "column",
-          }}
-        >
-          <button
-            onClick={addtocart}
-            className="add-to-cartx"
+    <>
+      <motion.div
+        className="product-cardx"
+        whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(0,0,0,0.2)" }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="product-badgex">
+          <h1>Best Seller</h1>
+          <FaHeart
+            onClick={handleHeartClick}
             style={{
+              color: isLiked ? "red" : "white",
+              cursor: "pointer",
+            }}
+            size={24}
+          />
+        </div>
+        <img
+          src={product.imageUrl}
+          alt={product.name}
+          className="product-imagekk"
+          onClick={handleBuyNow}
+        />
+        <div className="product-detailsx">
+          <p className="product-sizex">
+            <label htmlFor="size" style={{ color: "black" }}>
+              Choose a size:
+            </label>
+            <select
+              name="size"
+              id="size"
+              style={{ borderBottom: "1px solid black" }}
+            >
+              {product.sizes.map((size) => (
+                <option key={size._id} value={size.size}>
+                  {size.size} - ₹{size.price}
+                </option>
+              ))}
+            </select>
+          </p>
+          <h3 className="product-namex" onClick={handleBuyNow}>
+            {product.name}
+          </h3>
+          ⭐⭐⭐⭐⭐
+          <span style={{ fontSize: "15px" }}>{product.reviews} reviews</span>
+          <div
+            className="bns"
+            style={{
+              marginTop: "20px",
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               gap: "10px",
+              flexDirection: "column",
             }}
           >
-            <ShoppingBag /> Add to cart
-          </button>
-          <button
-            className="add-to-cartx"
-            style={{ display: "flex", justifyContent: "center", gap: "10px" }}
-            onClick={handleBuyNow}
-          >
-            <Zap /> Buy now
-          </button>
+            <button
+              onClick={addtocart}
+              className="add-to-cartx"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+              }}
+            >
+              <ShoppingBag /> Add to cart
+            </button>
+            <button
+              className="add-to-cartx"
+              style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+              onClick={handleBuyNow}
+            >
+              <Zap /> Buy now
+            </button>
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+      {showCart && (
+        <div
+          className="nhio"
+          style={{
+            position: "fixed",
+            top: 0,
+            right: 0,
+            color: "#fff",
+            width: "35%", // Default width
+            height: "100vh",
+            backgroundColor: "#000",
+            boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+            padding: "-2px",
+            overflowY: "auto",
+            zIndex: 1000,
+            // Media query for screens <= 768px
+            ...(window.innerWidth <= 768 ? { width: "100%" } : {}),
+          }}
+        >
+          <CircleX
+            color="#fff"
+            onClick={() => {
+              setShowCart(false);
+            }}
+          />
+          <Page />
+        </div>
+      )}
+    </>
   );
 }

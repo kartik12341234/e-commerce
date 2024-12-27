@@ -10,9 +10,24 @@
 
 .proconxw {
   display: flex;
-  gap: 20px;
-  padding: 0 20px; /* Add padding for spacing */
-  flex-wrap: wrap;
+  flex-direction: row; /* Horizontal scroll */
+  gap: 16px; /* Space between items */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  padding: 8px;
+  scrollbar-width: thin; /* Thin scrollbar for modern browsers */
+}
+
+.proconxw::-webkit-scrollbar {
+  height: 8px; /* Height of the scrollbar for horizontal scrolling */
+}
+
+.proconxw::-webkit-scrollbar-thumb {
+  background: #c4c4c4; /* Scrollbar thumb color */
+  border-radius: 4px; /* Rounded scrollbar thumb */
+}
+
+.proconxw::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Scrollbar track color */
 }
 
 .product-cardxw {

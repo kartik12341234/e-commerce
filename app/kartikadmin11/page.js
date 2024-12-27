@@ -42,14 +42,35 @@ export default function Page() {
 
   const [product, setProduct] = useState({
     name: "",
-    description: [{ imageUrl: "", paragraph: "" }], // Ensure it's an array
-    ingredients: "",
-    Benefits: "",
-    storageinfo: "",
+    description: [{ imageUrl: "", paragraph: "" }],
+    ingredients: [{ imageUrl: "", paragraph: "" }],
+    Skincare: [{ imageUrl: "", paragraph: "" }],
+    Haircare: [{ imageUrl: "", paragraph: "" }],
+    Wellness: [{ imageUrl: "", paragraph: "" }],
+    Massage: [{ imageUrl: "", paragraph: "" }],
+    OilPulling: [{ imageUrl: "", paragraph: "" }],
+    MakeupRemoval: [{ imageUrl: "", paragraph: "" }],
+    HairLoss: [{ imageUrl: "", paragraph: "" }],
+    ShelfLife: [{ imageUrl: "", paragraph: "" }],
+    Certifications: [{ imageUrl: "", paragraph: "" }],
+    WhyChooseUs: [{ imageUrl: "", paragraph: "" }],
+    comparisons: [{ imageUrl: "", paragraph: "" }],
     sizes: [{ size: "", price: "" }],
     image: null,
     additionalImages: [],
   });
+  const handleFieldChange = (field, index, subField, e) => {
+    const { value } = e.target;
+    const updatedField = [...product[field]];
+    updatedField[index][subField] = value;
+    setProduct((prev) => ({ ...prev, [field]: updatedField }));
+  };
+  const addField = (field) => {
+    setProduct((prev) => ({
+      ...prev,
+      [field]: [...prev[field], { imageUrl: "", paragraph: "" }],
+    }));
+  };
 
   const [imagePreview, setImagePreview] = useState(null);
   const [additionalImagesPreview, setAdditionalImagesPreview] = useState([]);
@@ -104,11 +125,26 @@ export default function Page() {
 
     setProduct((prev) => ({ ...prev, description: updatedDescription }));
   };
+  const handleingredientsChange = (index, field, e) => {
+    const { value } = e.target;
+    const updatedingredients = [...product.ingredients];
+
+    // Update the correct field (paragraph or imageUrl)
+    updatedingredients[index][field] = value;
+
+    setProduct((prev) => ({ ...prev, ingredients: updatedingredients }));
+  };
 
   const addDescriptionField = () => {
     setProduct((prev) => ({
       ...prev,
       description: [...prev.description, { imageUrl: "", paragraph: "" }],
+    }));
+  };
+  const addingredientsField = () => {
+    setProduct((prev) => ({
+      ...prev,
+      ingredients: [...prev.ingredients, { imageUrl: "", paragraph: "" }],
     }));
   };
 
@@ -119,8 +155,17 @@ export default function Page() {
         name: product.name,
         description: product.description,
         ingredients: product.ingredients,
-        Benefits: product.Benefits,
-        storageinfo: product.storageinfo,
+        Skincare: product.Skincare,
+        Haircare: product.Haircare,
+        Wellness: product.Wellness,
+        Massage: product.Massage,
+        OilPulling: product.OilPulling,
+        MakeupRemoval: product.MakeupRemoval,
+        HairLoss: product.HairLoss,
+        ShelfLife: product.ShelfLife,
+        Certifications: product.Certifications,
+        WhyChooseUs: product.WhyChooseUs,
+        comparisons: product.comparisons,
         sizes: product.sizes,
       };
 
@@ -266,45 +311,90 @@ export default function Page() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Ingredients
+                ingredients
               </label>
-              <textarea
-                name="ingredients"
-                value={product.ingredients}
-                onChange={handleChange}
-                rows="2"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-                required
-              />
+              {product.ingredients.map((ing, index) => (
+                <div key={index} className="flex flex-col gap-4">
+                  {/* Textarea for paragraph */}
+                  <textarea
+                    name="paragraph" // Keep it simple for name
+                    value={ing.paragraph}
+                    onChange={(e) =>
+                      handleingredientsChange(index, "paragraph", e)
+                    } // Pass the field name here
+                    rows="4"
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+                    required
+                  />
+                  {/* Input for image URL */}
+                  <input
+                    type="text"
+                    name="imageUrl"
+                    value={ing.imageUrl}
+                    onChange={(e) =>
+                      handleingredientsChange(index, "imageUrl", e)
+                    } // Pass the field name here
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+                    placeholder="Image URL"
+                  />
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addingredientsField}
+                className="mt-2 text-blue-500"
+              >
+                + Add Another ingredients
+              </button>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Benefits
-              </label>
-              <textarea
-                name="Benefits"
-                value={product.Benefits}
-                onChange={handleChange}
-                rows="2"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Storage Information
-              </label>
-              <textarea
-                name="storageinfo"
-                value={product.storageinfo}
-                onChange={handleChange}
-                rows="2"
-                className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-                required
-              />
-            </div>
+            {[
+              "Skincare",
+              "Haircare",
+              "Wellness",
+              "Massage",
+              "OilPulling",
+              "MakeupRemoval",
+              "HairLoss",
+              "ShelfLife",
+              "Certifications",
+              "WhyChooseUs",
+              "comparisons",
+            ].map((field) => (
+              <div key={field}>
+                <label className="block text-sm font-medium text-gray-700">
+                  {field}
+                </label>
+                {product[field].map((item, index) => (
+                  <div key={index} className="flex flex-col gap-4">
+                    <textarea
+                      value={item.paragraph}
+                      onChange={(e) =>
+                        handleFieldChange(field, index, "paragraph", e)
+                      }
+                      rows="4"
+                      className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+                    />
+                    <input
+                      type="text"
+                      value={item.imageUrl}
+                      onChange={(e) =>
+                        handleFieldChange(field, index, "imageUrl", e)
+                      }
+                      className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
+                      placeholder="Image URL"
+                    />
+                  </div>
+                ))}{" "}
+                <button
+                  type="button"
+                  onClick={() => addField(field)}
+                  className="mt-2 text-blue-500"
+                >
+                  + Add Another {field}
+                </button>
+              </div>
+            ))}
 
             <div>
               <label className="block text-sm font-medium text-gray-700">

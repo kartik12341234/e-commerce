@@ -1,9 +1,12 @@
 "use client";
 import { Button } from "@headlessui/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+// import products from "razorpay/dist/types/products";
 import React, { useEffect, useState } from "react";
 
 const Page = () => {
+  let useremail;
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -64,19 +67,33 @@ const Page = () => {
                 </button>
               </>
             ) : (
-              <>
-                <h3>{item.productName}</h3>
-                <p>Price: ₹{item.price}</p>
-                <p>Quantity: 1</p>
-              </>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "20px",
+                }}
+              >
+                <div
+                  className="imgs"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <Image src={item.imageUrl} width={60} height={60}></Image>
+                </div>
+                <div className="hikdj">
+                  <h3>{item.productName}</h3>
+                  <p>Price: ₹{item.price}</p>
+                  <p>Quantity: 1</p>
+                </div>
+              </div>
             )}
             <button
               style={{
-                backgroundColor: "black",
+                backgroundColor: "#034",
                 color: "white",
                 marginTop: "20px",
                 borderRadius: "8px",
-                width: "200px",
+                width: "160px",
                 height: "40px",
               }}
             >
@@ -107,7 +124,7 @@ const Page = () => {
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
           margin-bottom: 1rem;
           width: 100%;
-          max-width: 600px;
+          max-width: 300px;
           text-align: center;
         }
         .cart-item h3 {

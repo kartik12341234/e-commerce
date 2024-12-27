@@ -1,22 +1,32 @@
 "use client";
-
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import axios from "axios";
+import Homeproduct from "@/components/Homeproduct";
+import Image from "next/image";
+import OilsTable from "@/components/OilsTable";
 import "./des.css"; // Import the CSS file for styling
 import CustomerReviews from "@/components/Review";
-import Know from "@/components/know";
-import OilsTable from "@/components/OilsTable";
-import Homeproduct from "@/components/Homeproduct";
-import Wr from "@/components/Wr";
-import ProductPage from "@/components/Productpage";
-import Pl from "@/components/Pl";
-
 export default function Page({ params }) {
   const route = useRouter();
-  const reviewSectionRef = useRef(null);
+  const [productId, setProductId] = useState(null);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [useremail, setUseremail] = useState(null);
+  const number = Math.floor(Math.random() * 85) + 1;
+  // State for managing collapsed sections
+  const [collapsedSections, setCollapsedSections] = useState({});
 
+  // Fetch the user email once the component mounts
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const email = localStorage.getItem("loginid");
+      setUseremail(email);
+    }
+  }, []);
   const handleScrollToReviews = () => {
     if (reviewSectionRef.current) {
       reviewSectionRef.current.scrollIntoView({
@@ -25,31 +35,8 @@ export default function Page({ params }) {
       });
     }
   };
-
-  // State to manage productId
-  const [productId, setProductId] = useState(null);
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [sections, setSections] = useState({
-    description: false,
-    ingredients: false,
-    benefits: false,
-    storageInfo: false,
-  });
-  const [cartItems, setCartItems] = useState({
-    useremail: localStorage.getItem("loginid"),
-    productId,
-    productName: product,
-    price: "price",
-  });
-  const addtocart = () => {
-    setCartItems(cartItems);
-    console.log(cartItems);
-    const response = axios.post(`/api/mycart/${useremail}`, cartItems).then;
-    console.log(response);
+  const handleOptionChange = (size) => {
+    setSelectedOption(size);
   };
   const buy = () => {
     if (!selectedOption) {
@@ -60,8 +47,20 @@ export default function Page({ params }) {
       `/checkout/${productId}?selectedSize=${selectedOption._id}&quantity=${quantity}`
     );
   };
+  const reviewSectionRef = useRef(null);
 
-  // Unwrapping the Promise-based params
+  const handleIncrease = () => {
+    setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+  const addtocart = () => {
+    setCartItems(cartItems);
+    console.log(cartItems);
+    const response = axios.post(`/api/mycart/${useremail}`, cartItems).then;
+    console.log(response);
+  };
+  const handleDecrease = () => {
+    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+  };
   useEffect(() => {
     const fetchParams = async () => {
       const resolvedParams = await params;
@@ -70,7 +69,6 @@ export default function Page({ params }) {
     fetchParams();
   }, [params]);
 
-  // Fetch product details when productId is available
   useEffect(() => {
     if (!productId) return;
 
@@ -88,22 +86,111 @@ export default function Page({ params }) {
     fetchProductDetail();
   }, [productId]);
 
-  const toggleSection = (section) => {
-    setSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  // Toggle collapse state for a section
+  const toggleCollapse = (section) => {
+    setCollapsedSections((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section], // Toggle the collapse state for this section
+    }));
   };
 
-  const number = Math.floor(Math.random() * 85) + 1;
+  const renderCollapsibleSection = (sectionName, data) => {
+    if (!data || data.length === 0) return null; // Do not render if no data
 
-  const handleOptionChange = (size) => {
-    setSelectedOption(size);
-  };
+    return (
+      <div style={{ marginBottom: "16px" }}>
+        <button
+          onClick={() => toggleCollapse(sectionName)} // Button to toggle collapse
+          style={{
+            fontSize: "1.125rem",
+            fontWeight: "600",
+            display: "flex",
+            color: "#2d3748",
+            padding: "8px",
+            // backgroundColor: "#edf2f7",
+            borderRadius: "8px",
+            width: "100%",
+            textAlign: "left",
+            cursor: "pointer",
+            transition: "background-color 0.3s",
+          }}
+          onMouseOver={(e) => (e.target.style.backgroundColor = "#e2e8f0")}
+          onMouseOut={(e) => (e.target.style.backgroundColor = "#edf2f7")}
+        >
+          {sectionName} {collapsedSections[sectionName] ? "▲" : "▼"}{" "}
+          {/* Toggle icon */}
+        </button>
+        {collapsedSections[sectionName] && (
+          <div
+            className="hiiio"
+            style={{
+              marginTop: "8px",
+              // backgroundColor: "#009",
+              display: "flex",
+              gap: "20px",
+            }}
+          >
+            {data.map((item, index) => (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  // alignItems: "center",
+                  marginBottom: "16px",
+                }}
+              >
+                <div
+                  className="dio"
+                  style={{
+                    marginLeft: "80px",
+                    // backgroundColor: "#036",
 
-  const handleIncrease = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
-  };
+                    // border: "0.6px solid #0505",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    margin: "auto",
+                  }}
+                >
+                  {" "}
+                  <Image
+                    src={item.imageUrl}
+                    alt={`Image for ${sectionName}`}
+                    width={80}
+                    height={80}
+                    style={{
+                      marginTop: "10px",
+                      borderRadius: "8px",
+                      marginLeft: "10%",
+                      marginBottom: "16px",
+                      maxHeight: "80px", // Keep image size consistent
+                    }}
+                  />
+                  <div style={{ wordWrap: "break-word" }}>
+                    <p
+                      style={{
+                        // width: "250px",
+                        width: "100%",
+                        fontSize: "1rem",
+                        color: "#000",
+                        lineHeight: "1.5",
+                        fontWeight: "400",
+                        border: "1px solid #f5f5f5",
 
-  const handleDecrease = () => {
-    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
+                        margin: "8px 10px 0",
+                      }}
+                    >
+                      {item.paragraph}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   if (loading) {
@@ -114,9 +201,20 @@ export default function Page({ params }) {
     return <div>{error}</div>;
   }
 
+  // Log and adjust sections dynamically based on the product object
+  const sections = Object.keys(product).reduce((acc, key) => {
+    if (product[key] && Array.isArray(product[key])) {
+      acc[key] = product[key];
+    }
+    return acc;
+  }, {});
+
+  // Debugging: Check sections data
+  console.log("Sections data:", sections);
+
   return (
     <>
-      <Pl></Pl>
+      {" "}
       <div className="containerp">
         <div className="grid">
           {/* Product Image */}
@@ -330,66 +428,76 @@ export default function Page({ params }) {
             </button>
           </div>
         </div>
+        <div style={{ padding: "16px" }}>
+          {Object.keys(sections)
+            .slice(0, -2)
+            .map((sectionName) => {
+              const sectionData = sections[sectionName];
+              if (!sectionData || sectionData.length === 0) {
+                return null; // Skip rendering sections with no data
+              }
+              return renderCollapsibleSection(sectionName, sectionData);
+            })}
+        </div>
 
         {/* Additional Images Section */}
         {/* {product?.additionalImages && product?.additionalImages.length > 0 && (
-          <div className="additional-images">
-            <div className="additional-images-container">
-              {product.additionalImages.map((imageUrl, index) => (
-                <img
-                  key={index}
-                  src={imageUrl}
-                  alt={`Additional image ${index + 1}`}
-                />
-              ))}
-            </div>
-          </div>
-        )} */}
-        <div className="collapsible-section">
-          <div
-            className="section-header"
-            onClick={() => toggleSection("description")}
-          >
-            <h3>Description</h3>
-            <span>{sections.description ? "-" : "+"}</span>
-          </div>
-          {sections.description && <p>{product?.description}</p>}
-        </div>
-
-        <div className="collapsible-section">
-          <div
-            className="section-header"
-            onClick={() => toggleSection("ingredients")}
-          >
-            <h3>Ingredients</h3>
-            <span>{sections.ingredients ? "-" : "+"}</span>
-          </div>
-          {sections.ingredients && <p>{product?.ingredients}</p>}
-        </div>
-
-        <div className="collapsible-section">
-          <div
-            className="section-header"
-            onClick={() => toggleSection("benefits")}
-          >
-            <h3>Benefits</h3>
-            <span>{sections.benefits ? "-" : "+"}</span>
-          </div>
-          {sections.benefits && <p>{product?.Benefits}</p>}
-        </div>
-
-        <div className="collapsible-section">
-          <div
-            className="section-header"
-            onClick={() => toggleSection("storageInfo")}
-          >
-            <h3>Storage Info</h3>
-            <span>{sections.storageInfo ? "-" : "+"}</span>
-          </div>
-          {sections.storageInfo && <p>{product?.storageinfo}</p>}
+      <div className="additional-images">
+        <div className="additional-images-container">
+          {product.additionalImages.map((imageUrl, index) => (
+            <img
+              key={index}
+              src={imageUrl}
+              alt={`Additional image ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
+    )} */}
+        {/* <div className="collapsible-section">
+      <div
+        className="section-header"
+        onClick={() => toggleSection("description")}
+      >
+        <h3>Description</h3>
+        <span>{sections.description ? "-" : "+"}</span>
+      </div>
+      {sections.description && <p>{product?.description}</p>}
+    </div>
 
+    <div className="collapsible-section">
+      <div
+        className="section-header"
+        onClick={() => toggleSection("ingredients")}
+      >
+        <h3>Ingredients</h3>
+        <span>{sections.ingredients ? "-" : "+"}</span>
+      </div>
+      {sections.ingredients && <p>{product?.ingredients}</p>}
+    </div>
+
+    <div className="collapsible-section">
+      <div
+        className="section-header"
+        onClick={() => toggleSection("benefits")}
+      >
+        <h3>Benefits</h3>
+        <span>{sections.benefits ? "-" : "+"}</span>
+      </div>
+      {sections.benefits && <p>{product?.Benefits}</p>}
+    </div>
+
+    <div className="collapsible-section">
+      <div
+        className="section-header"
+        onClick={() => toggleSection("storageInfo")}
+      >
+        <h3>Storage Info</h3>
+        <span>{sections.storageInfo ? "-" : "+"}</span>
+      </div>
+      {sections.storageInfo && <p>{product?.storageinfo}</p>}
+    </div>*/}
+      </div>
       <div className="msa" ref={reviewSectionRef}>
         <CustomerReviews></CustomerReviews>
       </div>
@@ -397,9 +505,9 @@ export default function Page({ params }) {
       <div className="cin" style={{ marginTop: "150px" }}>
         <Homeproduct></Homeproduct>
       </div>
-
-      <Know></Know>
-      {/* <CertificationSlider></CertificationSlider> */}
+      <div className="msa" ref={reviewSectionRef}>
+        <CustomerReviews></CustomerReviews>
+      </div>
     </>
   );
 }
