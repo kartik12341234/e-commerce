@@ -7,6 +7,8 @@ import Image from "next/image";
 import OilsTable from "@/components/OilsTable";
 import "./des.css"; // Import the CSS file for styling
 import CustomerReviews from "@/components/Review";
+import { Plane } from "lucide-react";
+import Pl from "@/components/Pl";
 export default function Page({ params }) {
   const route = useRouter();
   const [productId, setProductId] = useState(null);
@@ -214,7 +216,7 @@ export default function Page({ params }) {
 
   return (
     <>
-      {" "}
+      <Pl></Pl>{" "}
       <div className="containerp">
         <div className="grid">
           {/* Product Image */}
@@ -504,9 +506,6 @@ export default function Page({ params }) {
       <OilsTable></OilsTable>
       <div className="cin" style={{ marginTop: "150px" }}>
         <Homeproduct></Homeproduct>
-      </div>
-      <div className="msa" ref={reviewSectionRef}>
-        <CustomerReviews></CustomerReviews>
       </div>
     </>
   );

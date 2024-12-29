@@ -12,11 +12,13 @@ import Testimonials from "@/components/Testimonials";
 import Categories from "@/components/Categories";
 import Bulk from "@/components/Bulk";
 import Carousel from "@/components/Carouesal";
+import Hamburger from "@/components/Hamburger";
 // import Main from "@/components/Main/Main";
 export default function Home() {
   return (
     <div>
       {/* <Main></Main> */}
+      {/* <Hamburger></Hamburger> */}
       <Carousel></Carousel>
       <AboutSection></AboutSection>
       <Homeproduct></Homeproduct>

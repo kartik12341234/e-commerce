@@ -84,14 +84,17 @@ const CustomerReviews = () => {
           {reviews.map((review) => (
             <div key={review._id} className="review">
               <div className="rating">{Array(review.rating).fill("⭐")}</div>
-              <h3 style={{ display: "flex", gap: "30px" }}>
+              <h3 style={{ display: "flex", gap: "10px" }}>
                 <div
                   className="dj"
                   style={{ backgroundColor: "grey", borderRadius: "4px" }}
                 >
                   <UserCheck color="#000"></UserCheck>{" "}
                 </div>
-                {review.username} <span className="verified">Veified ✔ </span>
+                {review.username}{" "}
+                <span className="verified" style={{ marginLeft: "-6px" }}>
+                  Veified ✔{" "}
+                </span>
                 {review.verified && <span className="verified">Verified</span>}
               </h3>
               <p>{review.comment}</p>

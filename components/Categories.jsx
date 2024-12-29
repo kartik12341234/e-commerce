@@ -6,27 +6,27 @@ export default function Categories() {
   // Array of oil categories with name and image URL
   const oils = [
     {
-      name: "kartijey",
+      name: "wood pressed oil",
       image:
         "https://www.anveshan.farm/cdn/shop/files/anv-saffron-01.jpg?v=1715771792&width=360",
     },
     {
-      name: "Coconut Oil",
+      name: "GHEE",
       image:
         "https://www.rosierfoods.com/cdn/shop/collections/image_867e0c03-ac86-45ae-9acc-494cbb52a8d5.jpg?v=1712577492",
     },
     {
-      name: "Olive Oil",
+      name: "nuts and dry fruits",
       image:
         "https://www.anveshan.farm/cdn/shop/files/anv-saffron-01.jpg?v=1715771792&width=360",
     },
     {
-      name: "Almond Oil",
+      name: "super foods",
       image:
         "https://www.anveshan.farm/cdn/shop/files/anv-saffron-01.jpg?v=1715771792&width=360",
     },
     {
-      name: "Sesame Oil",
+      name: "no added sugar snacks",
       image:
         "https://www.anveshan.farm/cdn/shop/files/anv-saffron-01.jpg?v=1715771792&width=360",
     },
@@ -55,7 +55,7 @@ export default function Categories() {
 console.log('Oils array:', oils);ject-cover"
             />
             <div className="p-4">
-              {/* <h2 className="text-xl font-medium text-gray-800">{oil.name}</h2> */}
+              <h2 className="text-xl font-medium text-gray-800">{oil.name}</h2>
             </div>
           </div>
         ))}

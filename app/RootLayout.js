@@ -10,6 +10,7 @@ import Know from "@/components/know";
 import CertificationSlider from "@/components/Certi";
 import IconMenu from "@/components/IconMenu";
 import Coupon from "@/components/Coupon";
+import MobileTop from "@/components/MobileTop";
 
 // export const metadata = {
 //   title: "OIL Site",
@@ -37,6 +38,9 @@ export default function RootLayout({ children }) {
       <body>
         <div className="cou">
           <Coupon />
+        </div>
+        <div className="mooo">
+          <MobileTop></MobileTop>
         </div>
         <div className="mobi">
           <Header />

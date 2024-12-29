@@ -4,10 +4,17 @@
 .forphone {
   display: none;
 }
+.mooo {
+  display: none;
+}
 @media (max-width: 768px) {
   .mobi {
     display: none;
   }
+  .mooo {
+    display: flex;
+  }
+
   .forphone {
     position: fixed;
     bottom: 0;

@@ -74,16 +74,18 @@ export default function Page() {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [additionalImagesPreview, setAdditionalImagesPreview] = useState([]);
-  // const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const ordershistory = axios
-  //   .get("/api/buy/checkout")
-  //   .then((res) => setOrders(res.data));
+  useEffect(() => {
+    const ordershistory = axios
+      .get("/api/buy/checkout")
+      .then((res) => setOrders(res.data));
+  }, []);
 
   const handleSizeChange = (index, e) => {
     const { name, value } = e.target;
@@ -285,7 +287,6 @@ export default function Page() {
                     } // Pass the field name here
                     rows="4"
                     className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-                    required
                   />
                   {/* Input for image URL */}
                   <input
@@ -324,7 +325,6 @@ export default function Page() {
                     } // Pass the field name here
                     rows="4"
                     className="mt-1 p-2 w-full border border-gray-300 rounded-lg"
-                    required
                   />
                   {/* Input for image URL */}
                   <input
@@ -409,7 +409,6 @@ export default function Page() {
                     value={size.size}
                     onChange={(e) => handleSizeChange(index, e)}
                     className="p-2 w-full border border-gray-300 rounded-lg"
-                    required
                   />
                   <input
                     type="number"
@@ -418,7 +417,6 @@ export default function Page() {
                     value={size.price}
                     onChange={(e) => handleSizeChange(index, e)}
                     className="p-2 w-full border border-gray-300 rounded-lg"
-                    required
                   />
                 </div>
               ))}
@@ -442,7 +440,7 @@ export default function Page() {
       </div>
       <h1>all orders list</h1>
 
-      {/* <div
+      <div
         className="listing"
         style={{
           display: "flex",
@@ -541,7 +539,7 @@ export default function Page() {
             </div>
           );
         })}
-      </div> */}
+      </div>
 
       {/* Delivered Orders */}
     </>

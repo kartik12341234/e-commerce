@@ -127,10 +127,10 @@ function ProductCard({ product }) {
     router.push(`/product/${product._id}`);
   };
   const [showCart, setShowCart] = useState(false);
-  const addtocart = () => {
+  const addtocart = async () => {
     axios.post(`/api/mycart/${useremail}`, cartItems);
     console.log(cartItems);
-    setShowCart(true);
+    await setShowCart(true);
     alert("Product added to cart!");
   };
 
@@ -220,10 +220,10 @@ function ProductCard({ product }) {
             position: "fixed",
             top: 0,
             right: 0,
-            color: "#fff",
+            color: "#000",
             width: "35%", // Default width
             height: "100vh",
-            backgroundColor: "#000",
+            backgroundColor: "#fff",
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
             padding: "-2px",
             overflowY: "auto",
@@ -233,11 +233,18 @@ function ProductCard({ product }) {
           }}
         >
           <CircleX
-            color="#fff"
+            color="red"
             onClick={() => {
               setShowCart(false);
             }}
           />
+          <img
+            src={
+              "https://cdn.shopify.com/s/files/1/0270/3346/9006/files/Cart_banner.jpg?v=1734956547"
+            }
+            // height={100}
+            // width={100}
+          ></img>
           <Page />
         </div>
       )}

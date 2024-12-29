@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Wr() {
+  useEffect(() => {
+    const reviewsCount = document.querySelector(".reviews-count");
+
+    // Scroll down by 40% when clicking on reviews count
+    if (reviewsCount) {
+      reviewsCount.addEventListener("click", () => {
+        const scrollAmount = document.documentElement.scrollHeight * 0.6;
+        window.scrollBy({ top: scrollAmount, behavior: "smooth" });
+      });
+    }
+
+    return () => {
+      if (reviewsCount) {
+        reviewsCount.removeEventListener("click", () => {});
+      }
+    };
+  }, []);
+
   return (
     <div
       className="reviews-containerd"
@@ -71,6 +89,5 @@ export default function Wr() {
 
       <button className="write-review">Write a review</button>
     </div>
-    // </div>
   );
 }
