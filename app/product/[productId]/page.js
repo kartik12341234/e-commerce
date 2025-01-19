@@ -11,6 +11,7 @@ import { Plane } from "lucide-react";
 import Pl from "@/components/Pl";
 export default function Page({ params }) {
   const route = useRouter();
+
   const [productId, setProductId] = useState(null);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,11 +55,20 @@ export default function Page({ params }) {
   const handleIncrease = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
   };
+
   const addtocart = () => {
-    setCartItems(cartItems);
-    console.log(cartItems);
-    const response = axios.post(`/api/mycart/${useremail}`, cartItems).then;
-    console.log(response);
+    alert("added to cart");
+    // const [cartItems, setCartItems] = useState({
+    //   useremail: localStorage.getItem("loginid"),
+    //   productId: product._id,
+    //   productName: product.name,
+    //   imageUrl: product.imageUrl,
+    //   price: product.sizes[0].price,
+    // });
+    // setCartItems(cartItems);
+    // console.log(cartItems);
+    // const response = axios.post(`/api/mycart/${useremail}`, cartItems).then;
+    // console.log(response);
   };
   const handleDecrease = () => {
     setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
@@ -258,18 +268,22 @@ export default function Page({ params }) {
 
           {/* Product Details */}
           <div className="product-details">
-            <h1 className="product-name" style={{ marginTop: "20px" }}>
+            <h1 className="product-name" style={{ marginTop: "25px" }}>
               {product?.name}
             </h1>
             <div
               className="fdgshj"
               style={{ display: "flex", justifyContent: "space-between" }}
             >
-              <h1 className="product-nam" style={{ marginTop: "20px" }}>
-                ⭐⭐⭐⭐⭐ <span>{number} reviews</span>
+              <h1 className="product-nam" style={{ marginTop: "-5px" }}>
+                <span style={{ color: "#f2cb05", fontSize: "15px" }}>
+                  ⭐⭐⭐⭐⭐
+                </span>{" "}
+                <span>| {number} reviews</span>
               </h1>
+
               {selectedOption ? (
-                <h1 className="product-price" style={{ marginTop: "10px" }}>
+                <h1 className="product-price" style={{}}>
                   Price: ₹{selectedOption.price * quantity}
                   <span style={{ fontSize: "8px", color: "grey" }}>
                     MRP (Incl. of all taxes)
@@ -282,13 +296,21 @@ export default function Page({ params }) {
               )}
             </div>
 
-            <h1 className="product-nam" onClick={handleScrollToReviews}>
+            <h1
+              style={{
+                marginTop: "-20px",
+
+                color: "grey",
+              }}
+              className="product-nam"
+              onClick={handleScrollToReviews}
+            >
               <span
                 style={{
-                  marginBottom: "-10px",
+                  marginTop: "-15px",
                   cursor: "pointer",
                   textDecoration: "underline",
-                  color: "grey",
+                  color: "#000",
                 }}
               >
                 see all reviews
@@ -343,7 +365,8 @@ export default function Page({ params }) {
                     <div
                       className="high"
                       style={{
-                        borderBottom: "1px solid black",
+                        borderBottom: "3px solid black",
+                        // marginTop: "-2px",
                         backgroundColor:
                           selectedOption?._id === size._id
                             ? "#00584b"
@@ -404,7 +427,9 @@ export default function Page({ params }) {
               }}
               onClick={addtocart}
             >
-              <button className="button add-to-cart">Add to Cart</button>
+              <button className="button add-to-cart" onClick={addtocart}>
+                Add to Cart
+              </button>
               <button
                 style={{
                   cursor: "pointer",

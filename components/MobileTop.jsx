@@ -91,7 +91,7 @@ export default function MobileTop() {
           </div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {[
-              { text: "All Products", href: "/" },
+              { text: "All Products", href: "/allproduct" },
               { text: "B2G1 SALE", href: "/sale" },
               { text: "A2 Ghee", href: "/a2-ghee" },
               { text: "Wood-Pressed Oils", href: "/wood-pressed-oils" },
@@ -157,6 +157,35 @@ export default function MobileTop() {
               </Link>
             </div>
           </div>
+          <h1
+            style={{
+              marginTop: "10%",
+              textDecoration: "none",
+              color: "#333",
+              fontSize: "1rem",
+              fontWeight: "500",
+              display: "block",
+              padding: "10px 0",
+              borderBottom: "1px solid #ddd",
+              transition: "color 0.3s",
+            }}
+          >
+            Login here
+          </h1>
+          <h1
+            style={{
+              textDecoration: "none",
+              color: "#333",
+              fontSize: "1rem",
+              fontWeight: "500",
+              display: "block",
+              padding: "10px 0",
+              borderBottom: "1px solid #ddd",
+              transition: "color 0.3s",
+            }}
+          >
+            Create account
+          </h1>
         </div>
       )}
     </>

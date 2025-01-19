@@ -127,11 +127,30 @@ function ProductCard({ product }) {
     router.push(`/product/${product._id}`);
   };
   const [showCart, setShowCart] = useState(false);
-  const addtocart = async () => {
-    axios.post(`/api/mycart/${useremail}`, cartItems);
-    console.log(cartItems);
-    await setShowCart(true);
-    alert("Product added to cart!");
+  const addtocart = () => {
+    if (!useremail) {
+      // Get existing cart items from localStorage or initialize with an empty array
+      const storedCart = JSON.parse(localStorage.getItem("guestCart")) || [];
+
+      // Check if the product is already in the cart to avoid duplicates
+      const isProductInCart = storedCart.some(
+        (item) => item.productId === cartItems.productId
+      );
+
+      if (!isProductInCart) {
+        storedCart.push(cartItems);
+        localStorage.setItem("guestCart", JSON.stringify(storedCart));
+        alert("Product added to cart for guest user!");
+      } else {
+        alert("Product is already in the cart!");
+      }
+    } else {
+      // Add to server cart if user is logged in
+      axios.post(`/api/mycart/${useremail}`, cartItems).then(() => {
+        alert("Product added to cart!");
+      });
+    }
+    setShowCart(true);
   };
 
   return (
@@ -221,11 +240,11 @@ function ProductCard({ product }) {
             top: 0,
             right: 0,
             color: "#000",
-            width: "35%", // Default width
+            width: "34%", // Default width
             height: "100vh",
             backgroundColor: "#fff",
             boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-            padding: "-2px",
+            padding: "2px",
             overflowY: "auto",
             zIndex: 1000,
             // Media query for screens <= 768px

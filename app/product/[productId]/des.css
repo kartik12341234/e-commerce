@@ -191,7 +191,7 @@
 
 .size-option.selected {
   color: #fff;
-  border-color: #00574b;
+  border-color: none;
   border-color: red;
 }
 

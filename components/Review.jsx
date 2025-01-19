@@ -92,10 +92,14 @@ const CustomerReviews = () => {
                   <UserCheck color="#000"></UserCheck>{" "}
                 </div>
                 {review.username}{" "}
-                <span className="verified" style={{ marginLeft: "-6px" }}>
+                {/* <span className="verified" style={{ marginLeft: "-6px" }}>
                   Veified ✔{" "}
-                </span>
-                {review.verified && <span className="verified">Verified</span>}
+                </span> */}
+                {review.verified && (
+                  <span className="verified" style={{ marginLeft: "-5px" }}>
+                    Veified ✔{" "}
+                  </span>
+                )}
               </h3>
               <p>{review.comment}</p>
               <div className="review-footer">

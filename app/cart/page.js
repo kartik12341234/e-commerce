@@ -2,7 +2,6 @@
 import { Button } from "@headlessui/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-// import products from "razorpay/dist/types/products";
 import React, { useEffect, useState } from "react";
 
 const Page = () => {
@@ -10,33 +9,35 @@ const Page = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
   if (typeof window !== "undefined") {
     useremail = localStorage.getItem("loginid");
   }
 
   useEffect(() => {
-    // Fetch cart items from the API
     const fetchCartItems = async () => {
       try {
-        const response = await fetch(`/api/mycart/${useremail}`); // Replace with your API endpoint
+        const response = await fetch(`/api/mycart/${useremail}`);
         const data = await response.json();
-
         if (response.ok) {
-          setCartItems(data); // Set cart items if data is returned
+          setCartItems(data);
         } else {
           console.error("Failed to fetch cart items:", data.message);
         }
       } catch (error) {
         console.error("Error fetching cart items:", error);
       } finally {
-        setIsLoading(false); // Stop loading after fetch
+        setIsLoading(false);
       }
     };
 
     fetchCartItems();
-  }, []);
+  }, [useremail]);
 
-  // Determine what to display
+  const handleBuy = (productId) => {
+    router.push(`/product/${productId}`);
+  };
+
   const itemsToDisplay =
     cartItems.length === 0 ? ["Your cart looks empty"] : cartItems;
 
@@ -49,108 +50,136 @@ const Page = () => {
         itemsToDisplay.map((item, index) => (
           <div className="cart-item" key={index}>
             {typeof item === "string" ? (
-              <>
-                {" "}
-                <button
-                  onClick={() => router.push("/allproduct")}
-                  style={{
-                    width: "200px",
-                    height: "40px",
-                    marginTop: "20px",
-                    backgroundColor: "black",
-                    color: "white",
-                    borderRadius: "8px",
-                  }}
-                >
-                  {" "}
-                  Continue Shopping
-                </button>
-              </>
+              <button
+                onClick={() => router.push("/allproduct")}
+                style={{
+                  display: "none",
+                }}
+              ></button>
             ) : (
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  gap: "20px",
+                  gap: "60px",
                 }}
               >
                 <div
                   className="imgs"
                   style={{ display: "flex", alignItems: "center" }}
                 >
-                  <Image src={item.imageUrl} width={60} height={60}></Image>
+                  <Image
+                    src={item.imageUrl}
+                    width={90}
+                    height={60}
+                    alt={item.productName}
+                  />
                 </div>
                 <div className="hikdj">
                   <h3>{item.productName}</h3>
                   <p>Price: ₹{item.price}</p>
                   <p>Quantity: 1</p>
+                  <button
+                    onClick={() => handleBuy(item.productId)}
+                    style={{
+                      backgroundColor: "#034",
+                      color: "white",
+                      marginTop: "20px",
+                      borderRadius: "8px",
+                      width: "200px",
+                      height: "40px",
+                    }}
+                  >
+                    Buy now
+                  </button>
                 </div>
               </div>
             )}
-            <button
-              style={{
-                backgroundColor: "#034",
-                color: "white",
-                marginTop: "20px",
-                borderRadius: "8px",
-                width: "160px",
-                height: "40px",
-              }}
-            >
-              Buy now
-            </button>
           </div>
         ))
       )}
+      <div>
+        {guestCart.length > 0 ? (
+          guestCart.map((item, index) => (
+            <div key={index} className="cart-tem" style={{ display: "flex" }}>
+              <div
+                className="ims"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <Image
+                  src={item.imageUrl}
+                  width={90}
+                  height={60}
+                  alt={item.productName}
+                />
+              </div>
+              <div className="hikj">
+                <h3>{item.productName}</h3>
+                <p>Price: ₹{item.price}</p>
+                <p>Quantity: 1</p>
+                <button
+                  onClick={() => handleBuy(item.productId)}
+                  className="buy-button"
+                >
+                  Buy now
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>Your guest cart is empty.</p>
+        )}
+      </div>
       <style jsx>{`
         .cart-container {
-          padding: 2rem;
+          padding: 1rem;
           display: flex;
           flex-direction: column;
           align-items: center;
-
           min-height: 100vh;
-        }
-        .cart-title {
-          font-size: 2rem;
-          margin-bottom: 1rem;
-          color: #333;
         }
         .cart-item {
           padding: 1rem;
           border: 1px solid #ddd;
           border-radius: 8px;
-
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
           margin-bottom: 1rem;
           width: 100%;
-          max-width: 300px;
+          max-width: 400px;
+          text-align: center;
+        }
+        .cart-tem {
+          padding: 1rem;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+          margin-bottom: 1rem;
+          width: 100%;
+          max-width: 340px;
           text-align: center;
         }
         .cart-item h3 {
           margin: 0;
           font-size: 1.2rem;
-          color: #555;
         }
-        .cart-item p {
-          margin: 0.5rem 0 0;
-          font-size: 1rem;
-          color: #777;
-        }
-        .empty-cart {
-          font-size: 1.2rem;
-          color: #777;
+        .buy-button {
+          background-color: #034;
+          color: white;
+          margin-top: 20px;
+          border-radius: 8px;
+          margin-left: 20px;
+          width: 200px;
+          height: 40px;
+          align-self: center;
         }
       `}</style>
-      <>
-        <h1>have an account ?</h1>
-        <p onClick={() => router.push("/login")} style={{ cursor: "pointer" }}>
-          <span style={{ color: "blue", textDecoration: "underline" }}>
-            Login
-          </span>{" "}
-          to checkout faster !{" "}
-        </p>
-      </>
+      <h1>Have an account?</h1>
+      <p onClick={() => router.push("/login")} style={{ cursor: "pointer" }}>
+        <span style={{ color: "blue", textDecoration: "underline" }}>
+          Login
+        </span>{" "}
+        to checkout faster!
+      </p>
     </div>
   );
 };
