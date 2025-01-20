@@ -8,7 +8,7 @@ import "./a.css"; // Import the CSS file for styling
 export default function CheckoutForm({ params }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { productId } = params;
+  const { productId } = React.use(params);
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,7 +54,6 @@ export default function CheckoutForm({ params }) {
     const { name, value } = e.target;
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
-  const useremail = localStorage.getItem("loginid");
 
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -65,7 +64,6 @@ export default function CheckoutForm({ params }) {
     try {
       const response = await axios.post("/api/buy/checkout", {
         userInfo,
-        useremail,
         productId,
         product: product.name,
         quantity,
@@ -276,17 +274,21 @@ export default function CheckoutForm({ params }) {
             }}
           >
             <p>
-              {product?.name} - {product?.selectedSize.size} jar
+              {product?.name} - {product?.selectedSize?.size || "N/A"} jar
             </p>
           </div>
           <p>
-            Total Price: ₹{(product?.selectedSize.price * quantity).toFixed(2)}
+            Total Price: ₹{(product?.selectedSize?.price * quantity).toFixed(2)}
           </p>
         </div>
-        <p>Subtotal: ₹{(product?.selectedSize.price * quantity).toFixed(2)}</p>
+        <p>
+          Subtotal: ₹
+          {(product?.selectedSize?.price * quantity)?.toFixed(2) || "0.00"}
+        </p>
         <p>Shipping: Calculated at checkout</p>
         <p className="total">
-          Total: ₹{(product?.selectedSize.price * quantity).toFixed(2)}
+          Total: ₹
+          {(product?.selectedSize?.price * quantity)?.toFixed(2) || "0.00"}
         </p>
       </div>
     </div>

@@ -9,7 +9,11 @@ const Page = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
+  let guestCart = [];
+  if (typeof window !== "undefined") {
+    guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
+  }
+
   if (typeof window !== "undefined") {
     useremail = localStorage.getItem("loginid");
   }
