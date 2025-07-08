@@ -1,5 +1,5 @@
 import React from "react";
-
+import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-black" aria-labelledby="footer-heading">
@@ -14,7 +14,7 @@ export default function Footer() {
               Your all orgainic products are here
             </p>
             <div className="flex space-x-6">
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <Link href="#" className="text-gray-400 hover:text-gray-500">
                 <span className="sr-only">Facebook</span>
                 <svg
                   className="h-6 w-6"
@@ -28,7 +28,7 @@ export default function Footer() {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
+              </Link>
               {/* Add similar elements for other social media icons, updating class to className */}
             </div>
           </div>
@@ -41,36 +41,36 @@ export default function Footer() {
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Marketing
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Analytics
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Commerce
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Insights
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -80,36 +80,36 @@ export default function Footer() {
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Pricing
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="/lab"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Lab test
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Guides
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="/reciepe"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       reciepe
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -121,44 +121,44 @@ export default function Footer() {
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       About
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Blog
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Jobs
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Press
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="#"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Partners
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -168,28 +168,28 @@ export default function Footer() {
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
                   <li>
-                    <a
+                    <Link
                       href="/rfe.pdf"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Claim
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="/pp.pdf"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Privacy
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
+                    <Link
                       href="/spf.pdf"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
                       Terms
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
