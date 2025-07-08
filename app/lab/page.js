@@ -64,12 +64,6 @@ export default function page() {
           {/* Label */}
           <h3 className="text-lg font-semibold my-4">{card.label}</h3>
           {/* Button */}
-          <a
-            href={card.link}
-            className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mb-4"
-          >
-            Read More
-          </a>
         </div>
       ))}
     </div>

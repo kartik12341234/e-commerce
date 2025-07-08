@@ -38,7 +38,7 @@ export default function Categories() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
+    <div className="min-h-screen  py-10">
       <h1 className="text-3xl font-semibold text-center mb-10">
         choose buy Categories
       </h1>
@@ -46,7 +46,7 @@ export default function Categories() {
         {oils.map((oil, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
+            className=" rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
           >
             <img
               src={oil.image}
@@ -55,7 +55,7 @@ export default function Categories() {
 console.log('Oils array:', oils);ject-cover"
             />
             <div className="p-4">
-              <h2 className="text-xl font-medium text-gray-800">{oil.name}</h2>
+              <h2 className="text-xl font-medium ">{oil.name}</h2>
             </div>
           </div>
         ))}

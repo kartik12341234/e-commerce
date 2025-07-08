@@ -10,14 +10,16 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   let guestCart = [];
+
   if (typeof window !== "undefined") {
     guestCart = JSON.parse(localStorage.getItem("guestCart")) || [];
-  }
-
-  if (typeof window !== "undefined") {
     useremail = localStorage.getItem("loginid");
   }
-
+  const calculateTotal = () => {
+    return [...cartItems, ...guestCart].reduce((total, item) => {
+      return total + item.price * (item.quantity || 1);
+    }, 0);
+  };
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
@@ -37,6 +39,30 @@ const Page = () => {
 
     fetchCartItems();
   }, [useremail]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const offers = [
+    {
+      title: "Flat 15% off",
+      code: "NEWME15",
+      condition: "Minimum purchase of ₹599",
+    },
+    {
+      title: "Buy 3 Get 8% off",
+      code: "BUY3",
+      condition: "Minimum purchase of 3 items",
+    },
+    {
+      title: "Buy 3, Pay For 2",
+      code: "B2G1",
+      condition: "On selected items",
+    },
+  ];
+
+  const copyCode = (code) => {
+    navigator.clipboard.writeText(code);
+    // Optional: Add toast notification here
+  };
 
   const handleBuy = (productId) => {
     router.push(`/product/${productId}`);
@@ -47,7 +73,43 @@ const Page = () => {
 
   return (
     <div className="cart-container">
-      {cartItems.length === 0 ? <p>Your cart is empty</p> : <p>Your cart</p>}
+      <h1 className="cart-title">Your Cart</h1>
+
+      <div className="w-full max-w-3xl mx-auto mb-6">
+        <h2 className="text-lg font-semibold mb-3">
+          Available offers for you ({offers.length})
+        </h2>
+
+        <div
+          className="flex overflow-x-auto gap-4 pb-4 no-scrollbar"
+          style={{ backgroundColor: "fff8f1" }}
+        >
+          {offers.map((offer, index) => (
+            <div
+              key={index}
+              className="flex-shrink-0 w-64  rounded-lg border border-gray-200 p-4"
+              style={{ backgroundColor: "#fff8f1" }}
+            >
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {offer.title}
+              </h3>
+              <p className="text-sm text-gray-600 mb-3">{offer.condition}</p>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 bg-gray-100 rounded px-3 py-2 text-sm font-mono">
+                  {offer.code}
+                </div>
+                <button
+                  onClick={() => copyCode(offer.code)}
+                  className="px-3 py-2 bg-green-800 text-white text-sm rounded hover:bg-green-700 transition-colors"
+                >
+                  COPY
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {isLoading ? (
         <p>Loading...</p>
       ) : (
@@ -61,38 +123,36 @@ const Page = () => {
                 }}
               ></button>
             ) : (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: "60px",
-                }}
-              >
-                <div
-                  className="imgs"
-                  style={{ display: "flex", alignItems: "center" }}
-                >
+              <div className="item-layout">
+                <div className="img-container">
                   <Image
                     src={item.imageUrl}
                     width={90}
-                    height={60}
+                    height={90}
                     alt={item.productName}
                   />
                 </div>
-                <div className="hikdj">
+                <div className="item-details">
                   <h3>{item.productName}</h3>
-                  <p>Price: ₹{item.price}</p>
-                  <p>Quantity: 1</p>
+                  <p className="price">₹{item.price}</p>
+                  <div className="quantity-control">
+                    <button
+                      className="qty-btn"
+                      onClick={() => handleBuy(item.productId)}
+                    >
+                      -
+                    </button>
+                    <span>1</span>
+                    <button
+                      className="qty-btn"
+                      onClick={() => handleBuy(item.productId)}
+                    >
+                      +
+                    </button>
+                  </div>
                   <button
                     onClick={() => handleBuy(item.productId)}
-                    style={{
-                      backgroundColor: "#034",
-                      color: "white",
-                      marginTop: "20px",
-                      borderRadius: "8px",
-                      width: "200px",
-                      height: "40px",
-                    }}
+                    className="buy-now-btn"
                   >
                     Buy now
                   </button>
@@ -102,88 +162,200 @@ const Page = () => {
           </div>
         ))
       )}
-      <div>
-        {guestCart.length > 0 ? (
-          guestCart.map((item, index) => (
-            <div key={index} className="cart-tem" style={{ display: "flex" }}>
-              <div
-                className="ims"
-                style={{ display: "flex", alignItems: "center" }}
-              >
+
+      <div className="guest-cart">
+        {guestCart.map((item, index) => (
+          <div key={index} className="cart-item">
+            <div className="item-layout">
+              <div className="img-container">
                 <Image
                   src={item.imageUrl}
                   width={90}
-                  height={60}
+                  height={90}
                   alt={item.productName}
                 />
               </div>
-              <div className="hikj">
+              <div className="item-details">
                 <h3>{item.productName}</h3>
-                <p>Price: ₹{item.price}</p>
-                <p>Quantity: 1</p>
+                <p className="price">₹{item.price}</p>
+                <div className="quantity-control">
+                  <button
+                    className="qty-btn"
+                    onClick={() => handleBuy(item.productId)}
+                  >
+                    -
+                  </button>
+                  <span>1</span>
+                  <button
+                    className="qty-btn"
+                    onClick={() => handleBuy(item.productId)}
+                  >
+                    +
+                  </button>
+                </div>
                 <button
                   onClick={() => handleBuy(item.productId)}
-                  className="buy-button"
+                  className="buy-now-btn"
                 >
                   Buy now
                 </button>
               </div>
             </div>
-          ))
-        ) : (
-          <p>Your guest cart is empty.</p>
-        )}
+          </div>
+        ))}
       </div>
+      {(cartItems.length > 0 || guestCart.length > 0) && (
+        <div className="cart-summary">
+          <div className="total">Total: ₹{calculateTotal()}</div>
+          <button className="checkout-btn">Continue</button>
+        </div>
+      )}
+
+      <div className="login-section">
+        <h2>Have an account?</h2>
+        <p onClick={() => router.push("/login")} className="login-text">
+          <span>Login</span> to checkout faster!
+        </p>
+      </div>
+
       <style jsx>{`
         .cart-container {
           padding: 1rem;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        .cart-summary {
+          position: fixed;
+          width: 100%;
           display: flex;
-          flex-direction: column;
-          align-items: center;
-          min-height: 100vh;
+           {
+            /* justify-content: space-between; */
+          }
+          gap: 20px;
+          bottom: 0;
+           {
+            /* margin-top: 2rem; */
+          }
+          padding: 1.5rem;
+          background: #f9f9f9;
+          border-radius: 8px;
         }
+        .checkout-btn {
+          width: 20%;
+           {
+            /* width: 100%; */
+          }
+          background: #ffc107;
+          color: black;
+          padding: 1rem;
+          border: none;
+           {
+            /* border-radius: 25px; */
+          }
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .total {
+          font-size: 1.5rem;
+          font-weight: 700;
+
+          margin-top: 1rem;
+        }
+        .cart-title {
+          font-size: 1.8rem;
+          font-weight: 600;
+          margin-bottom: 1.5rem;
+        }
+
+        .promo-card {
+          background: #e8f5e9;
+          padding: 1.2rem;
+          border-radius: 8px;
+          margin-bottom: 1.5rem;
+        }
+
+        .promo-card h2 {
+          color: #2e7d32;
+          font-size: 1.5rem;
+          margin-bottom: 0.5rem;
+        }
+
         .cart-item {
-          padding: 1rem;
           border: 1px solid #ddd;
           border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-          margin-bottom: 1rem;
-          width: 100%;
-          max-width: 400px;
-          text-align: center;
-        }
-        .cart-tem {
           padding: 1rem;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
           margin-bottom: 1rem;
-          width: 100%;
-          max-width: 340px;
-          text-align: center;
+          background: white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .cart-item h3 {
-          margin: 0;
+
+        .item-layout {
+          display: flex;
+          gap: 2rem;
+          align-items: center;
+        }
+
+        .img-container {
+          flex-shrink: 0;
+        }
+
+        .item-details {
+          flex-grow: 1;
+        }
+
+        .item-details h3 {
           font-size: 1.2rem;
+          margin-bottom: 0.5rem;
         }
-        .buy-button {
+
+        .price {
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin-bottom: 1rem;
+        }
+
+        .quantity-control {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .qty-btn {
+          background: none;
+          border: 1px solid #ddd;
+          padding: 0.25rem 0.75rem;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .buy-now-btn {
           background-color: #034;
           color: white;
-          margin-top: 20px;
+          padding: 0.75rem 1.5rem;
           border-radius: 8px;
-          margin-left: 20px;
+          border: none;
+          cursor: pointer;
           width: 200px;
-          height: 40px;
-          align-self: center;
+        }
+
+        .login-section {
+          text-align: center;
+          margin-top: 2rem;
+        }
+
+        .login-text {
+          cursor: pointer;
+          margin-top: 0.5rem;
+        }
+
+        .login-text span {
+          color: blue;
+          text-decoration: underline;
         }
       `}</style>
-      <h1>Have an account?</h1>
-      <p onClick={() => router.push("/login")} style={{ cursor: "pointer" }}>
-        <span style={{ color: "blue", textDecoration: "underline" }}>
-          Login
-        </span>{" "}
-        to checkout faster!
-      </p>
     </div>
   );
 };

@@ -62,7 +62,12 @@
     gap: 20px; /* Space between items */
     justify-items: center; /* Center items horizontally */
   }
-
+  .reviews-containerd {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+  }
   .feature-item {
     width: 100%; /* Ensure items fit within the grid cells */
     max-width: 150px; /* Optional: set a max width for better alignment */

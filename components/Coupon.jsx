@@ -1,18 +1,16 @@
 "use client";
 import React, { useState } from "react";
-import Header from "./Header";
-// import { FaBars, FaShoppingCart } from "react-icons/fa";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+
 export default function Coupon() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Array of products with names and URLs
   const products = [
     { name: "Sunflower Oil", link: "/products/sunflower-oil" },
     { name: "Coconut Oil", link: "/products/coconut-oil" },
@@ -21,24 +19,86 @@ export default function Coupon() {
   ];
 
   const handleProductClick = (link) => {
-    setMenuOpen(false); // Close menu on click
-    router.push(link); // Navigate to the product link
+    setMenuOpen(false);
+    router.push(link);
   };
 
   return (
-    <div className="coupon">
+    <div className="coupon overflow-hidden">
       <Link href="/allproduct">
-        {/* Top Banner */}
-        <p className="flex h-10 items-center justify-center bg-black text-sm font-medium text-white">
-          Get free delivery on orders over ₹400/- Get first order at 20% off
-        </p>
+        <div className="bg-black relative">
+          {/* Moving Coupon Animation */}
+          <div className="animate-slide-in w-full">
+            <div className="flex animate-scroll whitespace-nowrap py-2">
+              <div className="flex space-x-4 animate-scroll-primary">
+                <span className="text-sm font-medium text-white mx-4">
+                  Get free delivery on orders over ₹400/-
+                </span>
+                <span className="text-sm font-medium text-white mx-4">
+                  Get first order at 20% off
+                </span>
+              </div>
+              {/* Duplicate for seamless loop */}
+              <div className="flex space-x-4 animate-scroll-secondary">
+                <span className="text-sm font-medium text-white mx-4">
+                  Get free delivery on orders over ₹400/-
+                </span>
+                <span className="text-sm font-medium text-white mx-4">
+                  Get first order at 20% off
+                </span>
+                <span className="text-sm font-medium text-white mx-4">
+                  Get first order at 20% off
+                </span>
+                <span className="text-sm font-medium text-white mx-4">
+                  Get first order at 20% off
+                </span>
+                <span className="text-sm font-medium text-white mx-4">
+                  Get first order at 20% off
+                </span>
+                <span className="text-sm font-medium text-white mx-4">
+                  Get first order at 20% off
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </Link>
 
-      {/* Mobile Only Section */}
+      <style jsx>{`
+        .animate-slide-in {
+          animation: slide-in 3s forwards;
+        }
 
-      {/* Mobile Menu */}
+        @keyframes slide-in {
+          from {
+            transform: translateX(70%);
+          }
+          to {
+            transform: translateX(0);
+          }
+        }
 
-      {/* Overlay */}
+        .animate-scroll {
+          animation: scroll 20s linear infinite;
+        }
+
+        .animate-scroll-primary {
+          animation-delay: 0s;
+        }
+
+        .animate-scroll-secondary {
+          animation-delay: 0s;
+        }
+
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-100%);
+          }
+        }
+      `}</style>
     </div>
   );
 }

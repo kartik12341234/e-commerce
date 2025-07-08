@@ -26,7 +26,7 @@ export default function Home() {
         style={{
           position: "relative",
 
-          backgroundColor: "#fff",
+          // backgroundColor: "#fff",
 
           borderRadius: "8px",
           padding: "10px",
@@ -60,7 +60,7 @@ export default function Home() {
         style={{
           position: "relative",
 
-          backgroundColor: "#fff",
+          backgroundColor: "",
 
           borderRadius: "8px",
           padding: "10px",
@@ -72,7 +72,7 @@ export default function Home() {
         <Link href="/allproduct">
           <button
             style={{
-              backgroundColor: "#000", // Dark green color
+              backgroundColor: "transparent", // Dark green color
               color: "#fff", // White text
               border: "none",
               borderRadius: "4px",

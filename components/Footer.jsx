@@ -105,10 +105,10 @@ export default function Footer() {
                   </li>
                   <li>
                     <a
-                      href="#"
+                      href="/reciepe"
                       className="text-sm leading-6 text-white hover:text-white"
                     >
-                      API Status
+                      reciepe
                     </a>
                   </li>
                 </ul>

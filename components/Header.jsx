@@ -80,23 +80,19 @@ export default function Header() {
       { name: "Grains", path: "/categories/grains" },
     ],
     "All Product": [
-      { name: "Ghee", path: "/products" },
-      { name: "Oils", path: "/products/oils" },
-      { name: "Millets", path: "/products/millets" },
-      { name: "Deals", path: "/products/deals" },
+      { name: "Ghee", path: "/allproduct" },
+      { name: "Oils", path: "/allproduct" },
+      { name: "Millets", path: "/allproduct" },
+      { name: "Deals", path: "/allproduct" },
     ],
     "About us": [
-      { name: "Company Info", path: "/about/company-info" },
+      { name: "Company Info", path: "/about" },
       { name: "Our Team", path: "/about/our-team" },
       { name: "Mission", path: "/about/mission" },
     ],
-    "contact-us": [
-      { name: "Email", path: "/contact/email" },
-      { name: "Phone", path: "/contact/phone" },
-      { name: "Support", path: "/contact/support" },
-    ],
-    Stores: [
-      { name: "Delhi", path: "/stores/delhi" },
+
+    blogs: [
+      { name: "recipe", path: "/reciepe" },
       { name: "Mumbai", path: "/stores/mumbai" },
       { name: "Bangalore", path: "/stores/bangalore" },
       { name: "Chennai", path: "/stores/chennai" },
@@ -116,8 +112,8 @@ export default function Header() {
 
   return (
     <div className="hm" style={{ zIndex: "10000" }}>
-      <div className="bg-white relative z-10000">
-        <header className="relative bg-white">
+      <div className=" relative z-10000">
+        <header className="relative ">
           <nav
             aria-label="Top"
             className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"

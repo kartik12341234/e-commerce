@@ -77,7 +77,9 @@ const CustomerReviews = () => {
               </option>
             ))}
           </select>
-          <button type="submit">Submit Review</button>
+          <button type="submit" style={{ backgroundColor: "#2a431c" }}>
+            Submit Review
+          </button>
         </form>
 
         <div className="reviews-list">

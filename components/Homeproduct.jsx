@@ -181,11 +181,12 @@ function ProductCard({ product }) {
         />
         <div className="product-detailsx">
           <p className="product-sizex">
-            <label htmlFor="size" style={{ color: "black" }}>
+            <label htmlFor="size" style={{ color: "#000" }}>
               Choose a size:
             </label>
             <select
               name="size"
+              color="#000"
               id="size"
               style={{ borderBottom: "1px solid black" }}
             >
@@ -196,9 +197,13 @@ function ProductCard({ product }) {
               ))}
             </select>
           </p>
-          <h3 className="product-namex" onClick={handleBuyNow}>
+          <h1
+            className="product-namex"
+            onClick={handleBuyNow}
+            // style={{ color: "#2a431c" }}
+          >
             {product.name}
-          </h3>
+          </h1>
           ⭐⭐⭐⭐⭐
           <span style={{ fontSize: "15px" }}>{product.reviews} reviews</span>
           <div
@@ -217,17 +222,29 @@ function ProductCard({ product }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                alignItems: "center",
+                fontSize: "20px",
                 gap: "10px",
+                color: "#fff",
+                backgroundColor: "#2a431c",
               }}
             >
-              <ShoppingBag /> Add to cart
+              <ShoppingBag color="#fff" /> Add to cart
             </button>
             <button
               className="add-to-cartx"
-              style={{ display: "flex", justifyContent: "center", gap: "10px" }}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+                alignItems: "center",
+                fontSize: "20px",
+                color: "#fff",
+                backgroundColor: "#2a431c",
+              }}
               onClick={handleBuyNow}
             >
-              <Zap /> Buy now
+              <Zap color="#fff" /> <h1 sty>Buy now</h1>
             </button>
           </div>
         </div>

@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 const reviewSchema = new mongoose.Schema({
+  productId: { type: String, required: true }, // Product ID
+
   username: { type: String, required: true }, // User's name
   verified: { type: Boolean, default: false }, // Whether the user is verified
   rating: { type: Number, required: true }, // Rating (1 to 5 stars)

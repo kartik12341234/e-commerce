@@ -3,9 +3,9 @@ import { connect } from "@/config/Dbconfig";
 import cloudinary from "cloudinary";
 
 cloudinary.config({
-  cloud_name: "ddvgkjoxl",
-  api_key: "341847865211555",
-  api_secret: "ty4IMyAhYEfrue3y7-HyBov9fQc",
+  cloud_name: "dx8idwwrv",
+  api_key: "745635915749298",
+  api_secret: "9Mj9R8S-J6TMfjmICxiDIEZ06yk",
 });
 
 export async function POST(req) {

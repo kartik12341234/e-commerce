@@ -116,6 +116,7 @@ export default function ProductPage() {
                       margin: "0",
                       fontSize: "14px",
                       fontWeight: "bold",
+                      color: "#2a431c",
                     }}
                   >
                     {product.name}

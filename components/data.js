@@ -48,7 +48,7 @@ export const oilsData = [
     name: "Black Mustard Oil",
     imgSrc:
       "https://www.anveshan.farm/cdn/shop/files/oils_campare_05_200x.png?v=6558538487098673296",
-    uses: ["Cooking & Pickling", "Massage", "Oil Pulling", "Skin & Hair Care"],
+    uses: ["saurabh ", "Massage", "Oil Pulling", "Skin & Hair Care"],
     weather: "Any Weather",
     benefits: "Supports Heart Health & Gut Health",
     aroma: "Strong Pungent Aroma",

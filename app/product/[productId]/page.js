@@ -1,16 +1,27 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import Wr from "@/components/Wr";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Homeproduct from "@/components/Homeproduct";
 import Image from "next/image";
+import { User, UserCheck } from "lucide-react";
 import OilsTable from "@/components/OilsTable";
 import "./des.css"; // Import the CSS file for styling
 import CustomerReviews from "@/components/Review";
-import { Plane } from "lucide-react";
+import { Minus, Plane, Plus } from "lucide-react";
 import Pl from "@/components/Pl";
 export default function Page({ params }) {
   const route = useRouter();
+
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState({
+    productId: params.productId,
+    username: "",
+    verified: false,
+    rating: 5,
+    comment: "",
+  });
 
   const [productId, setProductId] = useState(null);
   const [product, setProduct] = useState(null);
@@ -22,6 +33,23 @@ export default function Page({ params }) {
   const number = Math.floor(Math.random() * 85) + 1;
   // State for managing collapsed sections
   const [collapsedSections, setCollapsedSections] = useState({});
+  // useEffect(() => {
+  //   fetchReviews();
+  // }, []);
+
+  const fetchReviews = async () => {
+    if (!productId) {
+      console.error("Product ID is required to fetch reviews.");
+      return;
+    }
+    try {
+      const response = await axios.get(`/api/reviews/${productId}`);
+      console.log("Reviews fetched:", response.data);
+      setReviews(response.data);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
 
   // Fetch the user email once the component mounts
   useEffect(() => {
@@ -54,6 +82,24 @@ export default function Page({ params }) {
 
   const handleIncrease = () => {
     setQuantity((prevQuantity) => prevQuantity + 1);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`/api/reviews/${productId}`, newReview);
+      setNewReview({
+        productId: productId,
+        username: "",
+        verified: false,
+        rating: 5,
+        comment: "",
+      });
+      console.log(newReview);
+      alert("Review submitted successfully!");
+      fetchReviews(); // Refresh reviews after submission
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   };
 
   const addtocart = () => {
@@ -89,6 +135,7 @@ export default function Page({ params }) {
         const response = await axios.get(`/api/admin/pro/${productId}`);
         setProduct(response.data.product);
         setLoading(false);
+        fetchReviews();
       } catch (err) {
         setError("Error fetching product details");
         setLoading(false);
@@ -122,16 +169,26 @@ export default function Page({ params }) {
             // backgroundColor: "#edf2f7",
             borderRadius: "8px",
             width: "100%",
-            textAlign: "left",
+            // textAlign: "left",
+            justifyContent: "space-between",
             cursor: "pointer",
             transition: "background-color 0.3s",
           }}
           onMouseOver={(e) => (e.target.style.backgroundColor = "#e2e8f0")}
           onMouseOut={(e) => (e.target.style.backgroundColor = "#edf2f7")}
         >
-          {sectionName} {collapsedSections[sectionName] ? "▲" : "▼"}{" "}
+          <h1 style={{ textTransform: "uppercase" }}>{sectionName}</h1>
+          <h1>
+            {" "}
+            {collapsedSections[sectionName] ? (
+              <Minus></Minus>
+            ) : (
+              <Plus></Plus>
+            )}{" "}
+          </h1>
           {/* Toggle icon */}
         </button>
+
         {collapsedSections[sectionName] && (
           <div
             className="hiiio"
@@ -285,7 +342,7 @@ export default function Page({ params }) {
               {selectedOption ? (
                 <h1 className="product-price" style={{}}>
                   Price: ₹{selectedOption.price * quantity}
-                  <span style={{ fontSize: "8px", color: "grey" }}>
+                  <span style={{ fontSize: "20px", color: "#000000" }}>
                     MRP (Incl. of all taxes)
                   </span>
                 </h1>
@@ -386,7 +443,14 @@ export default function Page({ params }) {
                       }}
                     >
                       {" "}
-                      <span className="size-price" style={{ color: "black" }}>
+                      <span
+                        className="size-price"
+                        style={{
+                          color: "black",
+                          width: "100%",
+                          borderBottom: "1px solid #000",
+                        }}
+                      >
                         ₹{size.price}
                       </span>
                       <span className="size-price" style={{ color: "black" }}>
@@ -399,7 +463,7 @@ export default function Page({ params }) {
             </div>
 
             {/* Quantity Selector */}
-            <div
+            {/* <div
               className="quantity-selector"
               style={{ display: "flex", justifyContent: "center" }}
             >
@@ -415,46 +479,192 @@ export default function Page({ params }) {
               <button className="quantity-button" onClick={handleIncrease}>
                 +
               </button>
-            </div>
+            </div> */}
 
             {/* Add to Cart and Buy Now Buttons */}
             <div
-              className="buttons"
+              // className="buttos"
               style={{
                 display: "flex",
                 justifyContent: "center",
                 cursor: "pointer",
+                // backgroundColor: "#2a431c",
               }}
-              onClick={addtocart}
             >
-              <button className="button add-to-cart" onClick={addtocart}>
-                Add to Cart
+              <button
+                className=""
+                onClick={addtocart}
+                style={{
+                  width: "400px",
+                  color: "#fff",
+                  fontWeight: "700",
+                  fontSize: "22px",
+                  backgroundColor: "#2a431c",
+                }}
+              >
+                ADD TO CART
               </button>
+              <div
+                className="quantity-selector"
+                style={{
+                  // marginLeft: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  backgroundColor: "#fff",
+                  width: "200px",
+                }}
+              >
+                <button className="quantity-button" onClick={handleDecrease}>
+                  -
+                </button>
+                <input
+                  type="number"
+                  value={quantity}
+                  className="quantity-input"
+                  readOnly
+                />
+                <button className="quantity-button" onClick={handleIncrease}>
+                  +
+                </button>
+              </div>
+            </div>
+            <div
+              className="biooowe"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                cursor: "pointer",
+                backgroundColor: "#2a431c",
+
+                display: "flex",
+                justifyContent: "center",
+                cursor: "pointer",
+              }}
+            >
+              {" "}
               <button
                 style={{
+                  color: "#fff",
+                  fontWeight: "700",
                   cursor: "pointer",
-                  backgroundColor: "#00574b",
+
+                  backgroundColor: "#2a431c",
                   color: "white",
+                  fontSize: "25px",
                 }}
-                className="button buy-now"
+                // className="button buy-now"
                 onClick={buy}
               >
-                Buy Now
+                BUY NOW
               </button>
             </div>
             <button
               style={{
                 cursor: "pointer",
-                backgroundColor: "#007aff",
+                backgroundColor: "#2a431c",
                 color: "white",
+                fontWeight: "700",
+                fontSize: "25px",
               }}
-              className="button buy-nows"
+              // className="button buy-nows"
               onClick={buy}
             >
-              subscribe
+              SUBSCRIBE
             </button>
           </div>
         </div>
+        <div
+          className="cart-container"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "fixed",
+            bottom: "60px",
+            width: "100%",
+          }}
+        >
+          <div
+            className="buttons-wrapper"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              // maxWidth: "1200px",
+              // padding: "0 20px",
+              gap: "10px",
+              marginLeft: "-50px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flex: "1.45",
+                gap: "10px",
+              }}
+            >
+              <button
+                onClick={addtocart}
+                style={{
+                  flex: "1",
+                  color: "#fff",
+                  fontWeight: "700",
+                  zIndex: "1000",
+                  textAlign: "center",
+                  fontSize: "22px",
+                  backgroundColor: "#2a431c",
+                  // padding: "10px",
+                }}
+              >
+                ADD TO CART
+              </button>
+              <div
+                className="quantity-selector"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  backgroundColor: "#fff",
+                  minWidth: "120px",
+                }}
+              >
+                <button className="quantity-button" onClick={handleDecrease}>
+                  -
+                </button>
+                <input
+                  type="number"
+                  value={quantity}
+                  className="quantity-input"
+                  readOnly
+                />
+                <button className="quantity-button" onClick={handleIncrease}>
+                  +
+                </button>
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flex: "1",
+              }}
+            >
+              <button
+                style={{
+                  flex: "1",
+                  color: "#fff",
+                  fontWeight: "700",
+                  backgroundColor: "#2a431c",
+                  textAlign: "center",
+                  fontSize: "25px",
+                  padding: "10px",
+                }}
+                onClick={buy}
+              >
+                BUY NOW
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div style={{ padding: "16px" }}>
           {Object.keys(sections)
             .slice(0, -2)
@@ -526,7 +736,88 @@ export default function Page({ params }) {
     </div>*/}
       </div>
       <div className="msa" ref={reviewSectionRef}>
-        <CustomerReviews></CustomerReviews>
+        <>
+          <h2>Customer Reviews</h2>
+          <Wr></Wr>
+
+          <div className="reviews-container">
+            <div className="review-summary">
+              {/* Add a summary UI for the average rating */}
+            </div>
+            <form onSubmit={handleSubmit} className="review-form">
+              <input
+                type="text"
+                placeholder="Your name"
+                value={newReview.username}
+                onChange={(e) =>
+                  setNewReview({ ...newReview, username: e.target.value })
+                }
+                required
+              />
+              <textarea
+                placeholder="Write your review"
+                value={newReview.comment}
+                onChange={(e) =>
+                  setNewReview({ ...newReview, comment: e.target.value })
+                }
+                required
+              />
+              <select
+                value={newReview.rating}
+                onChange={(e) =>
+                  setNewReview({
+                    ...newReview,
+                    rating: parseInt(e.target.value),
+                  })
+                }
+              >
+                {[5, 4, 3, 2, 1].map((star) => (
+                  <option key={star} value={star}>
+                    {star} Star{star > 1 ? "s" : ""}
+                  </option>
+                ))}
+              </select>
+              <button type="submit" style={{ backgroundColor: "#2a431c" }}>
+                Submit Review
+              </button>
+            </form>
+
+            <div className="reviews-list">
+              {reviews.map((review) => (
+                <div key={review._id} className="review">
+                  <div className="rating">
+                    {Array(review.rating).fill("⭐")}
+                  </div>
+                  <h3 style={{ display: "flex", gap: "10px" }}>
+                    <div
+                      className="dj"
+                      style={{ backgroundColor: "grey", borderRadius: "4px" }}
+                    >
+                      <UserCheck color="#000"></UserCheck>{" "}
+                    </div>
+                    {review.username}{" "}
+                    {/* <span className="verified" style={{ marginLeft: "-6px" }}>
+                          Veified ✔{" "}
+                        </span> */}
+                    {review.verified && (
+                      <span className="verified" style={{ marginLeft: "-5px" }}>
+                        Veified ✔{" "}
+                      </span>
+                    )}
+                  </h3>
+                  <p>{review.comment}</p>
+                  <div className="review-footer">
+                    <span>{new Date(review.date).toLocaleDateString()}</span>
+                    <div>
+                      <button>👍 {review.helpfulVotes}</button>
+                      <button>👎 {review.notHelpfulVotes}</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
       </div>
       <OilsTable></OilsTable>
       <div className="cin" style={{ marginTop: "150px" }}>
