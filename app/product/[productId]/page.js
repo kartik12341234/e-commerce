@@ -12,76 +12,106 @@ import CustomerReviews from "@/components/Review";
 import { Minus, Plane, Plus } from "lucide-react";
 import Pl from "@/components/Pl";
 export default function Page({ params }) {
-  const route = useRouter();
+  // Unwrap params if it's a Promise (Next.js 14+)
+  let productIdParam = params?.productId;
+  try {
+    if (typeof params?.then === 'function') {
+      // params is a Promise
+      params = React.use(params);
+      productIdParam = params.productId;
+    }
+  } catch (e) {}
 
+  const route = useRouter();
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
-    productId: params.productId,
+    productId: productIdParam,
     username: "",
     verified: false,
     rating: 5,
     comment: "",
   });
-
-  const [productId, setProductId] = useState(null);
+  const [productId, setProductId] = useState(productIdParam);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedOption, setSelectedOption] = useState(null);
   const [useremail, setUseremail] = useState(null);
-  const number = Math.floor(Math.random() * 85) + 1;
-  // State for managing collapsed sections
   const [collapsedSections, setCollapsedSections] = useState({});
-  // useEffect(() => {
-  //   fetchReviews();
-  // }, []);
+  const [showCartBar, setShowCartBar] = useState(false);
+  const number = Math.floor(Math.random() * 85) + 1;
+  const reviewSectionRef = useRef(null);
 
-  const fetchReviews = async () => {
-    if (!productId) {
-      console.error("Product ID is required to fetch reviews.");
-      return;
-    }
-    try {
-      const response = await axios.get(`/api/reviews/${productId}`);
-      console.log("Reviews fetched:", response.data);
-      setReviews(response.data);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-    }
-  };
+  // useEffect for scroll bar
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowCartBar(window.scrollY > 150);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  // Fetch the user email once the component mounts
+  // Fetch user email once
   useEffect(() => {
     if (typeof window !== "undefined") {
       const email = localStorage.getItem("loginid");
       setUseremail(email);
     }
   }, []);
-  const handleScrollToReviews = () => {
-    if (reviewSectionRef.current) {
-      reviewSectionRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+
+  // Set productId from params
+  useEffect(() => {
+    setProductId(productIdParam);
+  }, [productIdParam]);
+
+  // Fetch product details and reviews
+  useEffect(() => {
+    if (!productId) return;
+    const fetchProductDetail = async () => {
+      try {
+        const response = await axios.get(`/api/admin/pro/${productId}`);
+        setProduct(response.data.product);
+        setLoading(false);
+        fetchReviews(response.data.product._id);
+      } catch (err) {
+        setError("Error fetching product details");
+        setLoading(false);
+      }
+    };
+    fetchProductDetail();
+  }, [productId]);
+
+  // Fetch reviews
+  const fetchReviews = async (id = productId) => {
+    if (!id) return;
+    try {
+      const response = await axios.get(`/api/reviews/${id}`);
+      setReviews(response.data);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
     }
   };
-  const handleOptionChange = (size) => {
-    setSelectedOption(size);
+
+  // Handlers
+  const handleScrollToReviews = () => {
+    if (reviewSectionRef.current) {
+      reviewSectionRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   };
+  const handleOptionChange = (size) => setSelectedOption(size);
   const buy = () => {
     if (!selectedOption) {
       alert("Please select a product size before proceeding.");
       return;
     }
-    route.push(
-      `/checkout/${productId}?selectedSize=${selectedOption._id}&quantity=${quantity}`
-    );
+    route.push(`/checkout/${productId}?selectedSize=${selectedOption._id}&quantity=${quantity}`);
   };
-  const reviewSectionRef = useRef(null);
-
-  const handleIncrease = () => {
-    setQuantity((prevQuantity) => prevQuantity + 1);
+  const handleIncrease = () => setQuantity((prev) => prev + 1);
+  const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  const addtocart = () => {
+    alert("added to cart");
+    // Add to cart logic here
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -94,82 +124,32 @@ export default function Page({ params }) {
         rating: 5,
         comment: "",
       });
-      console.log(newReview);
       alert("Review submitted successfully!");
-      fetchReviews(); // Refresh reviews after submission
+      fetchReviews();
     } catch (error) {
       console.error("Error submitting review:", error);
     }
   };
-
-  const addtocart = () => {
-    alert("added to cart");
-    // const [cartItems, setCartItems] = useState({
-    //   useremail: localStorage.getItem("loginid"),
-    //   productId: product._id,
-    //   productName: product.name,
-    //   imageUrl: product.imageUrl,
-    //   price: product.sizes[0].price,
-    // });
-    // setCartItems(cartItems);
-    // console.log(cartItems);
-    // const response = axios.post(`/api/mycart/${useremail}`, cartItems).then;
-    // console.log(response);
-  };
-  const handleDecrease = () => {
-    setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1));
-  };
-  useEffect(() => {
-    const fetchParams = async () => {
-      const resolvedParams = await params;
-      setProductId(resolvedParams.productId);
-    };
-    fetchParams();
-  }, [params]);
-
-  useEffect(() => {
-    if (!productId) return;
-
-    const fetchProductDetail = async () => {
-      try {
-        const response = await axios.get(`/api/admin/pro/${productId}`);
-        setProduct(response.data.product);
-        setLoading(false);
-        fetchReviews();
-      } catch (err) {
-        setError("Error fetching product details");
-        setLoading(false);
-      }
-    };
-
-    fetchProductDetail();
-  }, [productId]);
-
-  // Toggle collapse state for a section
   const toggleCollapse = (section) => {
     setCollapsedSections((prevState) => ({
       ...prevState,
-      [section]: !prevState[section], // Toggle the collapse state for this section
+      [section]: !prevState[section],
     }));
   };
-
   const renderCollapsibleSection = (sectionName, data) => {
-    if (!data || data.length === 0) return null; // Do not render if no data
-
+    if (!data || data.length === 0) return null;
     return (
       <div style={{ marginBottom: "16px" }}>
         <button
-          onClick={() => toggleCollapse(sectionName)} // Button to toggle collapse
+          onClick={() => toggleCollapse(sectionName)}
           style={{
             fontSize: "1.125rem",
             fontWeight: "600",
             display: "flex",
             color: "#2d3748",
             padding: "8px",
-            // backgroundColor: "#edf2f7",
             borderRadius: "8px",
             width: "100%",
-            // textAlign: "left",
             justifyContent: "space-between",
             cursor: "pointer",
             transition: "background-color 0.3s",
@@ -179,22 +159,14 @@ export default function Page({ params }) {
         >
           <h1 style={{ textTransform: "uppercase" }}>{sectionName}</h1>
           <h1>
-            {" "}
-            {collapsedSections[sectionName] ? (
-              <Minus></Minus>
-            ) : (
-              <Plus></Plus>
-            )}{" "}
+            {collapsedSections[sectionName] ? <Minus /> : <Plus />}
           </h1>
-          {/* Toggle icon */}
         </button>
-
         {collapsedSections[sectionName] && (
           <div
             className="hiiio"
             style={{
               marginTop: "8px",
-              // backgroundColor: "#009",
               display: "flex",
               gap: "20px",
             }}
@@ -206,7 +178,6 @@ export default function Page({ params }) {
                   display: "flex",
                   flexDirection: "row",
                   flexWrap: "wrap",
-                  // alignItems: "center",
                   marginBottom: "16px",
                 }}
               >
@@ -214,15 +185,11 @@ export default function Page({ params }) {
                   className="dio"
                   style={{
                     marginLeft: "80px",
-                    // backgroundColor: "#036",
-
-                    // border: "0.6px solid #0505",
                     justifyContent: "center",
                     alignItems: "center",
                     margin: "auto",
                   }}
                 >
-                  {" "}
                   <Image
                     src={item.imageUrl}
                     alt={`Image for ${sectionName}`}
@@ -233,20 +200,18 @@ export default function Page({ params }) {
                       borderRadius: "8px",
                       marginLeft: "10%",
                       marginBottom: "16px",
-                      maxHeight: "80px", // Keep image size consistent
+                      maxHeight: "80px",
                     }}
                   />
                   <div style={{ wordWrap: "break-word" }}>
                     <p
                       style={{
-                        // width: "250px",
                         width: "100%",
                         fontSize: "1rem",
                         color: "#000",
                         lineHeight: "1.5",
                         fontWeight: "400",
                         border: "1px solid #f5f5f5",
-
                         margin: "8px 10px 0",
                       }}
                     >
@@ -262,13 +227,8 @@ export default function Page({ params }) {
     );
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   // Log and adjust sections dynamically based on the product object
   const sections = Object.keys(product).reduce((acc, key) => {
@@ -277,9 +237,6 @@ export default function Page({ params }) {
     }
     return acc;
   }, {});
-
-  // Debugging: Check sections data
-  console.log("Sections data:", sections);
 
   return (
     <>
@@ -573,47 +530,48 @@ export default function Page({ params }) {
             </button>
           </div>
         </div>
-        <div
-          className="cart-container"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "fixed",
-            bottom: "60px",
-            width: "100%",
-          }}
-        >
+        {/* Fixed Cart Bar: Only show after scrolling down a bit */}
+        {showCartBar && (
           <div
-            className="buttons-wrapper"
+            className="cart-container"
             style={{
               display: "flex",
               justifyContent: "center",
+              alignItems: "center",
+              position: "fixed",
+              bottom: "60px",
               width: "100%",
-              // maxWidth: "1200px",
-              // padding: "0 20px",
-              gap: "10px",
-              marginLeft: "-50px",
+              zIndex: 1000,
+              boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
+              padding: "12px 0",
             }}
           >
             <div
+              className="buttons-wrapper"
               style={{
                 display: "flex",
-                flex: "1.45",
-                gap: "10px",
+                justifyContent: "center",
+                width: "100%",
+                gap: "16px",
+                alignItems: "center",
+                maxWidth: "900px",
               }}
             >
               <button
                 onClick={addtocart}
                 style={{
-                  flex: "1",
+                  flex: 1,
                   color: "#fff",
-                  fontWeight: "700",
-                  zIndex: "1000",
+                  fontWeight: 700,
                   textAlign: "center",
                   fontSize: "22px",
                   backgroundColor: "#2a431c",
-                  // padding: "10px",
+                  border: "none",
+                  borderRadius: "8px",
+                  height: "52px",
+                  minWidth: "160px",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                  transition: "background 0.2s",
                 }}
               >
                 ADD TO CART
@@ -622,12 +580,31 @@ export default function Page({ params }) {
                 className="quantity-selector"
                 style={{
                   display: "flex",
-                  justifyContent: "center",
+                  alignItems: "center",
                   backgroundColor: "#fff",
+                  border: "1.5px solid #2a431c",
+                  borderRadius: "8px",
+                  height: "52px",
                   minWidth: "120px",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                  overflow: "hidden",
                 }}
               >
-                <button className="quantity-button" onClick={handleDecrease}>
+                <button
+                  className="quantity-button"
+                  onClick={handleDecrease}
+                  style={{
+                    background: "#2a431c",
+                    color: "#fff",
+                    border: "none",
+                    width: "44px",
+                    height: "100%",
+                    fontSize: "22px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    borderRadius: 0,
+                  }}
+                >
                   -
                 </button>
                 <input
@@ -635,27 +612,47 @@ export default function Page({ params }) {
                   value={quantity}
                   className="quantity-input"
                   readOnly
+                  style={{
+                    width: "40px",
+                    textAlign: "center",
+                    fontSize: "20px",
+                    border: "none",
+                    outline: "none",
+                    background: "#fff",
+                  }}
                 />
-                <button className="quantity-button" onClick={handleIncrease}>
+                <button
+                  className="quantity-button"
+                  onClick={handleIncrease}
+                  style={{
+                    background: "#2a431c",
+                    color: "#fff",
+                    border: "none",
+                    width: "44px",
+                    height: "100%",
+                    fontSize: "22px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    borderRadius: 0,
+                  }}
+                >
                   +
                 </button>
               </div>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flex: "1",
-              }}
-            >
               <button
                 style={{
-                  flex: "1",
+                  flex: 1,
                   color: "#fff",
-                  fontWeight: "700",
+                  fontWeight: 700,
                   backgroundColor: "#2a431c",
                   textAlign: "center",
-                  fontSize: "25px",
-                  padding: "10px",
+                  fontSize: "22px",
+                  border: "none",
+                  borderRadius: "8px",
+                  height: "52px",
+                  minWidth: "160px",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
+                  transition: "background 0.2s",
                 }}
                 onClick={buy}
               >
@@ -663,7 +660,7 @@ export default function Page({ params }) {
               </button>
             </div>
           </div>
-        </div>
+        )}
 
         <div style={{ padding: "16px" }}>
           {Object.keys(sections)

@@ -1,335 +1,110 @@
-"use client";
-import { Fragment, useEffect, useState } from "react";
-import {
-  Dialog,
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  PopoverPanel,
-  Tab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels,
-} from "@headlessui/react";
-import {
-  Bars3Icon,
-  MagnifyingGlassIcon,
-  ShoppingBagIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Heart, LogIn, Search, ShoppingBag, UserPen } from "lucide-react";
+import {
+  Package,
+  ListTree,
+  ShoppingBag,
+  Info,
+  BookOpen,
+  ChevronDown,
+  User,
+  ShoppingCart,
+  Search,
+} from "lucide-react";
+import "./header.css";
 
-const navigation = {
-  categories: [
-    {
-      id: "Products",
-      name: "Products",
-      featured: [
-        {
-          name: "New Arrivals",
-          href: "#",
-          imageSrc:
-            "https://www.anveshan.farm/cdn/shop/files/moringa_safron.jpg?v=1727333767&width=360",
-          imageAlt: "Moringa and saffron products.",
-        },
-        {
-          name: "Basic oils",
-          href: "#",
-          imageSrc:
-            "https://www.anveshan.farm/cdn/shop/files/anveshan-hallikar-cow-ghee_500g.jpg?v=1722855359&width=360",
-          imageAlt: "Close up of various oils.",
-        },
-      ],
-      sections: [
-        {
-          id: "oil",
-          name: "Oil",
-          items: [
-            { name: "Sunflower Oil", href: "#" },
-            { name: "Coconut Oil", href: "#" },
-            { name: "Olive Oil", href: "#" },
-            { name: "Almond Oil", href: "#" },
-          ],
-        },
-        {
-          id: "brands",
-          name: "Brands",
-          items: [
-            { name: "Brand A", href: "#" },
-            { name: "Brand B", href: "#" },
-            { name: "Brand C", href: "#" },
-          ],
-        },
-      ],
-    },
-  ],
-  pages: [
-    { name: "Company", href: "#" },
-    { name: "Stores", href: "#" },
-  ],
-};
+const menuItems = [
+  {
+    name: "Products",
+    icon: <Package size={18} />, // Products icon
+    path: "/allproduct",
+  },
+  {
+    name: "Categories",
+    icon: <ListTree size={18} />,
+    dropdown: [
+      { name: "Fruits", icon: <ShoppingBag size={15} />, path: "/items" },
+      { name: "Vegetables", icon: <ShoppingBag size={15} />, path: "/categories/vegetables" },
+      { name: "Spices", icon: <ShoppingBag size={15} />, path: "/categories/spices" },
+      { name: "Grains", icon: <ShoppingBag size={15} />, path: "/categories/grains" },
+    ],
+  },
+  {
+    name: "All Product",
+    icon: <ShoppingBag size={18} />, // All Product icon
+    path: "/allproduct",
+  },
+  {
+    name: "About us",
+    icon: <Info size={18} />, // About us icon
+    dropdown: [
+      { name: "Company Info", icon: <Info size={15} />, path: "/about" },
+      { name: "Our Team", icon: <Info size={15} />, path: "/about/our-team" },
+      { name: "Mission", icon: <Info size={15} />, path: "/about/mission" },
+    ],
+  },
+  {
+    name: "blogs",
+    icon: <BookOpen size={18} />, // Blogs icon
+    dropdown: [
+      { name: "recipe", icon: <BookOpen size={15} />, path: "/reciepe" },
+      { name: "Mumbai", icon: <BookOpen size={15} />, path: "/stores/mumbai" },
+      { name: "Bangalore", icon: <BookOpen size={15} />, path: "/stores/bangalore" },
+      { name: "Chennai", icon: <BookOpen size={15} />, path: "/stores/chennai" },
+    ],
+  },
+];
 
 export default function Header() {
-  const dropdownData = {
-    Categories: [
-      { name: "Fruits", path: "/items" },
-      { name: "Vegetables", path: "/categories/vegetables" },
-      { name: "Spices", path: "/categories/spices" },
-      { name: "Grains", path: "/categories/grains" },
-    ],
-    "All Product": [
-      { name: "Ghee", path: "/allproduct" },
-      { name: "Oils", path: "/allproduct" },
-      { name: "Millets", path: "/allproduct" },
-      { name: "Deals", path: "/allproduct" },
-    ],
-    "About us": [
-      { name: "Company Info", path: "/about" },
-      { name: "Our Team", path: "/about/our-team" },
-      { name: "Mission", path: "/about/mission" },
-    ],
-
-    blogs: [
-      { name: "recipe", path: "/reciepe" },
-      { name: "Mumbai", path: "/stores/mumbai" },
-      { name: "Bangalore", path: "/stores/bangalore" },
-      { name: "Chennai", path: "/stores/chennai" },
-    ],
-  };
-
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const handleHover = (label) => {
-    setActiveDropdown(label);
-  };
-
-  const handleLeave = () => {
-    setActiveDropdown(null);
-  };
-
-  const [open, setOpen] = useState(false);
+  const handleHover = (idx) => setActiveDropdown(idx);
+  const handleLeave = () => setActiveDropdown(null);
 
   return (
-    <div className="hm" style={{ zIndex: "10000" }}>
-      <div className=" relative z-10000">
-        <header className="relative ">
-          <nav
-            aria-label="Top"
-            className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-          >
-            <div className="border-b border-gray-200">
-              <div className="flex h-16 items-center">
-                <button
-                  type="button"
-                  onClick={() => setOpen(true)}
-                  className="lg:hidden bg-white p-2 text-gray-400"
-                >
-                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                </button>
-
-                {/* Logo */}
-                <div className="ml-4 flex lg:ml-0">
-                  <Link href="/">
-                    <span className="sr-only">Your Company</span>
-                    <img src="file.svg" alt="" className="h-8 w-auto" />
-                  </Link>
+    <header className="header-pro">
+      <div className="header-inner compact">
+        <Link href="/">
+          <img src="/file.svg" alt="Logo" className="header-logo" />
+        </Link>
+        <nav className="header-nav compact">
+          {menuItems.map((item, idx) => (
+            <div
+              key={item.name}
+              className="nav-item-pro"
+              onMouseEnter={() => item.dropdown && handleHover(idx)}
+              onMouseLeave={handleLeave}
+            >
+              <Link
+                href={item.path || "#"}
+                className="nav-link-pro compact"
+                tabIndex={0}
+              >
+                <span className="nav-icon-pro compact">{item.icon}</span>
+                <span className="nav-text-pro compact">{item.name}</span>
+                {item.dropdown && <ChevronDown size={13} className="chev" />}
+              </Link>
+              {item.dropdown && activeDropdown === idx && (
+                <div className="dropdown-pro compact">
+                  {item.dropdown.map((drop) => (
+                    <Link href={drop.path} key={drop.name} className="dropdown-item-pro compact">
+                      <span className="dropdown-icon-pro compact">{drop.icon}</span>
+                      <span className="dropdown-text-pro compact">{drop.name}</span>
+                    </Link>
+                  ))}
                 </div>
-
-                {/* Flyout menus */}
-                <PopoverGroup className="hidden lg:ml-8 lg:block lg:self-stretch">
-                  <div className="flex h-full space-x-8">
-                    {navigation.categories.map((category) => (
-                      <Popover
-                        key={category.name}
-                        className="flex"
-                        onMouseEnter={() => setOpen(true)}
-                        onMouseLeave={() => setOpen(false)}
-                      >
-                        <PopoverButton className="relative z-10 -mb-px flex items-center border-b-2 border-transparent pt-px text-sm font-medium text-gray-700 transition duration-200 hover:text-gray-800">
-                          {category.name}
-                        </PopoverButton>
-
-                        <PopoverPanel
-                          className="absolute inset-x-0 top-full text-sm text-gray-500 transition-opacity duration-200"
-                          static={open}
-                        >
-                          <div className="absolute inset-0 top-1/2 bg-white shadow" />
-                          <div className="relative bg-white">
-                            <div className="mx-auto max-w-7xl px-8">
-                              <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
-                                <div className="col-start-2 grid grid-cols-2 gap-x-8">
-                                  {category.featured.map((item) => (
-                                    <div
-                                      key={item.name}
-                                      className="group relative text-base"
-                                    >
-                                      <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                                        <img
-                                          src={item.imageSrc}
-                                          alt={item.imageAlt}
-                                          className="object-cover"
-                                        />
-                                      </div>
-                                      <Link
-                                        href="#"
-                                        className="mt-6 block font-medium text-gray-900"
-                                      >
-                                        {item.name}
-                                      </Link>
-                                    </div>
-                                  ))}
-                                </div>
-                                <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10">
-                                  {category.sections.map((section) => (
-                                    <div key={section.name}>
-                                      <p className="font-medium text-gray-900">
-                                        {section.name}
-                                      </p>
-                                      <ul className="mt-6 space-y-6">
-                                        {section.items.map((item) => (
-                                          <li
-                                            key={item.name}
-                                            className="flow-root"
-                                          >
-                                            <a
-                                              href={item.href}
-                                              className="text-gray-500"
-                                            >
-                                              {item.name}
-                                            </a>
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </PopoverPanel>
-                      </Popover>
-                    ))}
-                    <div
-                      style={{
-                        marginLeft: "150px",
-                        fontWeight: "500",
-                        marginTop: "20px",
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: "160px",
-                      }}
-                    >
-                      <div
-                        className="midshow"
-                        style={{
-                          display: "flex",
-                          gap: "30px",
-                          position: "relative",
-                        }}
-                      >
-                        {Object.keys(dropdownData).map((label) => (
-                          <div
-                            key={label}
-                            style={{ position: "relative" }}
-                            onMouseEnter={() => handleHover(label)}
-                            onMouseLeave={handleLeave}
-                          >
-                            <h6
-                              style={{
-                                color: "#2d3748",
-                                cursor: "pointer",
-                                margin: "0",
-                              }}
-                            >
-                              {label}
-                            </h6>
-                            {activeDropdown === label && (
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  top: "30px",
-                                  left: "0",
-                                  backgroundColor: "#fff",
-                                  border: "1px solid #ccc",
-                                  boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                                  borderRadius: "5px",
-                                  zIndex: "1000",
-                                  minWidth: "150px",
-                                  padding: "10px",
-                                }}
-                              >
-                                {dropdownData[label].map((item, index) => (
-                                  <Link href={item.path} key={index} passHref>
-                                    <p
-                                      style={{
-                                        margin: "5px 0",
-                                        fontSize: "14px",
-                                        color: "#2d3748",
-                                        cursor: "pointer",
-                                      }}
-                                    >
-                                      {item.name}
-                                    </p>
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Other side of the menu */}
-                      <div
-                        className="leftsh"
-                        style={{
-                          display: "flex",
-                          gap: "30px",
-                        }}
-                      >
-                        {/* Search Box */}
-                        <div className="dii" style={{ display: "flex" }}>
-                          <input
-                            type="text"
-                            placeholder="🔍Search here"
-                            style={{
-                              width: "120px",
-                              height: "30px",
-                              border: "1px solid #2d3748",
-                              borderRadius: "0px",
-                            }}
-                          />
-                        </div>
-
-                        {/* Other Links */}
-                        <a
-                          href="/register"
-                          style={{ color: "#2d3748", cursor: "pointer" }}
-                        >
-                          <UserPen></UserPen>
-                        </a>
-                        <a
-                          href="/cart"
-                          style={{ color: "#2d3748", cursor: "pointer" }}
-                        >
-                          ❤️
-                        </a>
-                        <a
-                          href="/myorders"
-                          style={{ color: "#2d3748", cursor: "pointer" }}
-                        >
-                          🛒
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </PopoverGroup>
-              </div>
+              )}
             </div>
-          </nav>
-        </header>
+          ))}
+        </nav>
+        <div className="header-actions compact">
+          <div className="search-box-pro compact">
+            <Search size={15} />
+            <input type="text" placeholder="Search..." />
+          </div>
+          <Link href="/register" className="action-icon-pro compact"><User size={16} /></Link>
+          <Link href="/cart" className="action-icon-pro compact"><ShoppingCart size={16} /></Link>
+        </div>
       </div>
-    </div>
+    </header>
   );
 }

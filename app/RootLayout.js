@@ -12,10 +12,10 @@ import IconMenu from "@/components/IconMenu";
 import Coupon from "@/components/Coupon";
 import MobileTop from "@/components/MobileTop";
 
-// export const metadata = {
-//   title: "OIL Site",
-//   description: "a oil site",
-// };
+export const metadata = {
+  title: "OIL Site",
+  description: "a oil site",
+};
 
 export default function RootLayout({ children }) {
   useEffect(() => {

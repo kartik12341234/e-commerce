@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./Products.module.css";
 import SmallBox from "./SmallBox";
 import { ShoppingBag } from "lucide-react";
+import React from "react";
 
 const products = [
   {
@@ -53,8 +54,20 @@ const products = [
   // Add more products here if needed
 ];
 
+// Utility to detect mobile
+function isMobile() {
+  if (typeof window === 'undefined') return false;
+  return /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
 export default function ProductPage() {
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [mobile, setMobile] = useState(false);
+
+  // Detect mobile on mount
+  React.useEffect(() => {
+    setMobile(isMobile());
+  }, []);
 
   const openModal = (product) => setSelectedProduct(product);
   const closeModal = () => setSelectedProduct(null);
@@ -77,14 +90,22 @@ export default function ProductPage() {
               boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <video
-              className={styles.videoPreview}
-              src={product.videoSrc}
-              muted
-              loop
-              autoPlay
-              style={{ width: "100%", height: "310px", objectFit: "cover" }}
-            />
+            {mobile ? (
+              <img
+                src={product.src}
+                alt={product.name}
+                style={{ width: "100%", height: "310px", objectFit: "cover" }}
+              />
+            ) : (
+              <video
+                className={styles.videoPreview}
+                src={product.videoSrc}
+                muted
+                loop
+                autoPlay
+                style={{ width: "100%", height: "310px", objectFit: "cover" }}
+              />
+            )}
             <div
               style={{
                 position: "absolute",
@@ -141,7 +162,6 @@ export default function ProductPage() {
                     padding: "10px",
                     backgroundColor: "#2a431c",
                     color: "#ffffff",
-
                     border: "none",
                     borderRadius: "5px",
                     cursor: "pointer",

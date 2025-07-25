@@ -1,4 +1,4 @@
-import { Search, ShoppingBag, User } from "lucide-react";
+import { MenuSquare, Search, ShoppingBag, User } from "lucide-react";
 import React, { useState } from "react";
 import { FaFacebook, FaHamburger, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
@@ -28,7 +28,7 @@ export default function MobileTop() {
         }}
       >
         <div>
-          <FaHamburger
+          <MenuSquare
             onClick={toggleMenu}
             style={{ cursor: "pointer", fontSize: "1.5rem" }}
           />

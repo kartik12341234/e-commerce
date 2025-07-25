@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ImpactSection from "./Imapctsection";
 
 // DynamicGallery Component with autoplay (unchanged)
 const DynamicGallery = ({ items, autoplay = true }) => {
@@ -139,11 +140,16 @@ const JoinMovement = () => {
 // Main AboutPage Component
 const AboutPage = () => {
   const router = useRouter();
+  const [modalSection, setModalSection] = useState(null);
 
   // Sample data structure for all sections
   const sections = {
     howWeStarted: {
       title: "How We Started",
+      subtitle: "From a single farm to a movement",
+      description:
+        "In 2020, we began our journey with a vision to revolutionize sustainable farming in India. Our first organic farm set the foundation for what would become a nationwide movement.",
+      icon: "🌱",
       items: [
         {
           id: 1,
@@ -163,6 +169,10 @@ const AboutPage = () => {
     },
     ourStory: {
       title: "Our Story",
+      subtitle: "Empowering communities, one farm at a time",
+      description:
+        "We work hand-in-hand with local farmers, providing them with resources, training, and a platform to sell their organic produce. Our story is one of collaboration and shared success.",
+      icon: "🤝",
       items: [
         {
           id: 1,
@@ -176,6 +186,10 @@ const AboutPage = () => {
     },
     missionVision: {
       title: "Mission and Vision",
+      subtitle: "A sustainable future for all",
+      description:
+        "Our mission is to create sustainable farming solutions that benefit both people and the planet. We envision a world where organic, ethical food is accessible to everyone.",
+      icon: "🌏",
       items: [
         {
           id: 1,
@@ -193,6 +207,10 @@ const AboutPage = () => {
     },
     founders: {
       title: "Meet the Founders",
+      subtitle: "The people behind the movement",
+      description:
+        "Our founders are passionate advocates for organic farming and rural empowerment. Their leadership and vision have inspired a new generation of farmers.",
+      icon: "👩‍🌾",
       items: [
         {
           id: 1,
@@ -206,6 +224,10 @@ const AboutPage = () => {
     },
     whyUs: {
       title: "How Are We Doing It Differently?",
+      subtitle: "Innovation at every step",
+      description:
+        "We use innovative farming practices, technology, and community engagement to ensure the highest quality produce and a positive impact on the environment.",
+      icon: "💡",
       items: [
         {
           id: 1,
@@ -219,6 +241,10 @@ const AboutPage = () => {
     },
     soilToSoul: {
       title: "From Soil to Soul",
+      subtitle: "Farm to table, the organic way",
+      description:
+        "Our process ensures that every product is pure, organic, and full of nutrition. From the soil to your soul, we deliver health and happiness.",
+      icon: "🍃",
       items: [
         {
           id: 1,
@@ -234,72 +260,95 @@ const AboutPage = () => {
 
   // Function to render each section
   const renderSection = (key, data) => (
-    <section
-      className="py-16"
+    <div
       key={key}
-      style={{
-        margin: "auto",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
+      className="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center hover:shadow-2xl transition-shadow duration-300 border border-gray-100 group"
+      style={{ minHeight: 420, maxWidth: 420, margin: 'auto' }}
     >
-      <motion.div
-        style={{ textAlign: "center", width: "100%" }}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      <div className="flex items-center gap-3 mb-2">
+        <span className="text-3xl">{data.icon}</span>
+        <h2 className="text-2xl font-bold group-hover:text-green-700 transition-colors">{data.title}</h2>
+      </div>
+      <div className="text-green-900 text-lg mb-2 font-semibold">{data.subtitle}</div>
+      <div className="text-gray-600 mb-4 text-center">{data.description}</div>
+      <div className="w-full flex justify-center mb-2">
+        <div style={{ width: '100%', maxWidth: 320, aspectRatio: '4/3', position: 'relative' }}>
+          <DynamicGallery items={data.items} />
+        </div>
+      </div>
+      <button
+        onClick={() => router.push(`/about/${key}`)}
+        className="px-7 py-2 rounded-lg bg-green-600 text-white font-semibold mt-5 hover:bg-green-700 transition-colors shadow"
+        style={{ width: 'min(250px, 90vw)' }}
       >
-        <h2 className="text-4xl font-bold mb-8">{data.title}</h2>
-        <DynamicGallery items={data.items} />
-        <button
-          onClick={() => router.push(`/about/${key}`)}
-          className="px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
-          style={{
-            backgroundColor: "#00574b",
-            color: "#fff",
-            marginTop: "20px",
-            width: "400px",
-          }}
-        >
-          {data.cta}
-        </button>
-      </motion.div>
-    </section>
+        {data.cta}
+      </button>
+    </div>
   );
+
+  // Modal for dynamic section details
+  const renderModal = () => {
+    if (!modalSection) return null;
+    const { key, data } = modalSection;
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 relative animate-fadeInUp">
+          <button
+            onClick={() => setModalSection(null)}
+            className="absolute top-3 right-3 text-gray-500 hover:text-green-700 text-2xl font-bold"
+            aria-label="Close"
+          >
+            ×
+          </button>
+          <h2 className="text-2xl font-bold mb-4">{data.title}</h2>
+          <DynamicGallery items={data.items} autoplay={false} />
+          {data.items[0]?.caption && (
+            <p className="mt-4 text-gray-700 text-center">{data.items[0].caption}</p>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {renderModal()}
       {/* Title Section */}
       <motion.div
-        className="text-center py-16"
+        className="text-center py-12 md:py-16"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-5xl font-bold mb-4">
+        <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Who We Are and What We Stand For
         </h1>
-        <p className="text-xl text-gray-600">
+        <p className="text-lg md:text-xl text-gray-600">
           Revolutionizing sustainable farming in India
         </p>
       </motion.div>
-
-      {/* Dynamic Sections */}
-      {Object.entries(sections).map(([key, data]) => renderSection(key, data))}
+      {/* Clustered Card Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 my-12">
+        {Object.entries(sections).map(([key, data]) => renderSection(key, data))}
+      </div>
+      {/* Impact Section */}
+      <div className="my-12 md:my-20">
+        <ImpactSection />
+      </div>
 
       {/* Sustainability Banner */}
-      <SustainabilityBanner />
+      <div className="my-12 md:my-20">
+        <SustainabilityBanner />
+      </div>
 
       {/* Join Movement Section */}
-      <section className="py-16">
+      <section className="py-12 md:py-20">
         <JoinMovement />
       </section>
 
       {/* Behind the Scenes */}
-      <section className="py-16">
-        <h2 className="text-4xl font-bold mb-8">Behind the Scenes</h2>
+      <section className="py-12 md:py-20">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8">Behind the Scenes</h2>
         <DynamicGallery
           items={[
             {
@@ -311,10 +360,19 @@ const AboutPage = () => {
             },
           ]}
         />
-        <button className="mt-6 px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+        <button className="mt-6 px-8 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md">
           Take a Closer Look
         </button>
       </section>
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+      `}</style>
     </div>
   );
 };

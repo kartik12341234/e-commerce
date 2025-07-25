@@ -1,0 +1,226 @@
+.header-pro {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: 'Inter', sans-serif;
+}
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 72px;
+}
+.header-logo {
+  height: 44px;
+  width: auto;
+  margin-right: 32px;
+}
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-item-pro {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 72px;
+}
+.nav-link-pro {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #222;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.nav-link-pro:hover, .nav-link-pro:focus {
+  background: #f5f5f5;
+  color: #00704a;
+  box-shadow: 0 2px 8px rgba(0,112,74,0.08);
+  transform: translateY(-2px) scale(1.04);
+}
+.nav-icon-pro {
+  display: flex;
+  align-items: center;
+}
+.nav-text-pro {
+  margin-left: 4px;
+}
+.chev {
+  margin-left: 2px;
+  color: #aaa;
+}
+.dropdown-pro {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  min-width: 220px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdownFadeIn 0.18s ease;
+  z-index: 100;
+}
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.dropdown-item-pro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 24px;
+  color: #222;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+}
+.dropdown-item-pro:hover, .dropdown-item-pro:focus {
+  background: #f0f7f4;
+  color: #00704a;
+  transform: scale(1.03);
+}
+.dropdown-icon-pro {
+  display: flex;
+  align-items: center;
+}
+.dropdown-text-pro {
+  margin-left: 2px;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.search-box-pro {
+  display: flex;
+  align-items: center;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 4px 10px;
+  gap: 6px;
+  margin-right: 10px;
+}
+.search-box-pro input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1rem;
+  color: #222;
+  width: 120px;
+}
+.action-icon-pro {
+  display: flex;
+  align-items: center;
+  color: #00704a;
+  background: #f5f5f5;
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: background 0.18s, color 0.18s, transform 0.18s;
+  text-decoration: none;
+}
+.action-icon-pro:hover, .action-icon-pro:focus {
+  background: #e6f4ee;
+  color: #222;
+  transform: scale(1.08);
+}
+.header-inner.compact {
+  padding: 0 12px;
+  height: 56px;
+  gap: 8px;
+}
+.header-logo {
+  height: 32px;
+  margin-right: 16px;
+}
+.header-nav.compact {
+  gap: 12px;
+}
+.nav-link-pro.compact {
+  font-size: 0.97rem;
+  padding: 4px 10px;
+  gap: 5px;
+  border-radius: 6px;
+}
+.nav-icon-pro.compact {
+  font-size: 15px;
+}
+.nav-text-pro.compact {
+  margin-left: 2px;
+  font-size: 0.97rem;
+}
+.dropdown-pro.compact {
+  min-width: 160px;
+  padding: 8px 0;
+  border-radius: 10px;
+}
+.dropdown-item-pro.compact {
+  font-size: 0.97rem;
+  padding: 7px 16px;
+  gap: 7px;
+  border-radius: 6px;
+}
+.dropdown-icon-pro.compact {
+  font-size: 13px;
+}
+.dropdown-text-pro.compact {
+  margin-left: 2px;
+  font-size: 0.97rem;
+}
+.header-actions.compact {
+  gap: 10px;
+}
+.search-box-pro.compact {
+  padding: 2px 6px;
+  gap: 4px;
+  border-radius: 6px;
+  margin-right: 4px;
+}
+.search-box-pro.compact input {
+  font-size: 0.97rem;
+  width: 80px;
+}
+.action-icon-pro.compact {
+  padding: 4px 7px;
+  border-radius: 6px;
+  font-size: 15px;
+}
+@media (max-width: 1024px) {
+  .header-inner {
+    padding: 0 12px;
+    gap: 12px;
+  }
+  .header-nav {
+    gap: 16px;
+  }
+  .header-inner.compact {
+    padding: 0 4px;
+    gap: 4px;
+  }
+  .header-nav.compact {
+    gap: 6px;
+  }
+}
+@media (max-width: 768px) {
+  .header-pro {
+    display: none;
+  }
+}

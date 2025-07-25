@@ -40,6 +40,16 @@ const Page = () => {
     fetchCartItems();
   }, [useremail]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showSummary, setShowSummary] = useState(false);
+  // Placeholder values for summary
+  const orderTotal = calculateTotal();
+  const totalItems = cartItems.length + guestCart.length;
+  const toPay = orderTotal;
+  const itemsDiscount = 31;
+  const shipping = 49;
+  const shippingFree = true;
+  const prepaidDiscount = 43;
+  const savings = itemsDiscount + prepaidDiscount + (shippingFree ? shipping : 0);
 
   const offers = [
     {
@@ -206,8 +216,19 @@ const Page = () => {
       </div>
       {(cartItems.length > 0 || guestCart.length > 0) && (
         <div className="cart-summary">
-          <div className="total">Total: ₹{calculateTotal()}</div>
+          <div className="total clickable" onClick={() => setShowSummary(v => !v)}>
+            <span style={{fontWeight: 700, fontSize: '2rem'}}>₹{calculateTotal().toLocaleString()}</span>
+            <span style={{fontSize: '1.5rem', marginLeft: 4, cursor: 'pointer'}}>{showSummary ? '▲' : '▼'}</span>
+          </div>
+          <div style={{flex: '0 0 60px'}}></div>
           <button className="checkout-btn">Continue</button>
+          {showSummary && (
+            <div className="price-summary-dropdown">
+              <div className="summary-row"><span>Total Items</span><span>{totalItems}</span></div>
+              <div className="summary-row"><span>Total Price</span><span>₹{orderTotal}</span></div>
+              <div className="summary-row total-pay"><span>To Pay</span><span>₹{toPay}</span></div>
+            </div>
+          )}
         </div>
       )}
 
@@ -228,40 +249,94 @@ const Page = () => {
           position: fixed;
           width: 100%;
           display: flex;
-           {
-            /* justify-content: space-between; */
-          }
-          gap: 20px;
+          gap: 60px;
           bottom: 0;
-           {
-            /* margin-top: 2rem; */
-          }
           padding: 1.5rem;
-          background: #f9f9f9;
-          border-radius: 8px;
+          background: #fff;
+          border-top: 1px solid #eee;
+          border-radius: 0;
+          align-items: center;
+          z-index: 100;
         }
         .checkout-btn {
-          width: 20%;
-           {
-            /* width: 100%; */
-          }
-          background: #ffc107;
-          color: black;
-          padding: 1rem;
+          background: #ffd97a;
+          color: #22543d;
+          padding: 1rem 2.5rem;
           border: none;
-           {
-            /* border-radius: 25px; */
-          }
+          border-radius: 10px;
           font-size: 1.1rem;
           font-weight: 600;
           cursor: pointer;
+          transition: background 0.2s;
         }
-
+        .checkout-btn:hover {
+          background: #ffe9a7;
+        }
         .total {
           font-size: 1.5rem;
           font-weight: 700;
-
           margin-top: 1rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+        }
+        .total.clickable:hover {
+          color: #22543d;
+        }
+        .price-summary-dropdown {
+          position: absolute;
+          left: 0;
+          bottom: 70px;
+          width: 350px;
+          background: #fff;
+          border: 1px solid #ddd;
+          border-radius: 12px;
+          box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+          padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+          z-index: 200;
+        }
+        .summary-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 0.5rem;
+          font-size: 1.1rem;
+        }
+        .summary-row.total-pay {
+          font-weight: 700;
+          font-size: 1.2rem;
+          margin-top: 0.7rem;
+        }
+        .strike {
+          text-decoration: line-through;
+          color: #888;
+          font-size: 1rem;
+          margin-left: 4px;
+        }
+        .savings-banner {
+          background: #22643d;
+          color: #fff;
+          border-radius: 7px;
+          padding: 0.7rem 1rem;
+          margin: 1rem 0 0.7rem 0;
+          font-weight: 500;
+          text-align: center;
+        }
+        .payment-icons {
+          display: flex;
+          gap: 0.7rem;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 0.5rem;
+        }
+        .payment-icons img {
+          height: 28px;
+          width: auto;
+        }
+        .secured-payments {
+          text-align: center;
+          color: #444;
+          font-size: 1rem;
+          margin-top: 0.2rem;
         }
         .cart-title {
           font-size: 1.8rem;
