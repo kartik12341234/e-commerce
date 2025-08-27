@@ -55,32 +55,21 @@ const IconMenu = () => {
         gap: "30px",
         justifyContent: "center",
         alignItems: "center",
-        padding: "28px 20px 32px 20px",
-        background: "#f8fafc",
-        borderRadius: "18px",
-        boxShadow: "0 4px 32px 0 rgba(0,0,0,0.08)",
-        margin: "32px auto 0 auto",
-        maxWidth: 900,
+        padding: "20px",
       }}
     >
       {icons.map((icon, index) => (
         <motion.div
           key={index}
-          whileHover={{ scale: 1.13, y: -8, boxShadow: "0 8px 32px 0 rgba(0,112,74,0.18)" }}
-          whileTap={{ scale: 0.97 }}
+          whileHover={{ scale: 1.2, rotate: 10 }}
+          whileTap={{ scale: 0.9 }}
+          animate={{ y: [0, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
           style={{
             textAlign: "center",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            background: "#fff",
-            borderRadius: "14px",
-            boxShadow: "0 2px 12px 0 rgba(0,0,0,0.06)",
-            padding: "18px 12px 12px 12px",
-            cursor: "pointer",
-            transition: "box-shadow 0.2s, transform 0.2s",
-            border: "1.5px solid #e0e7ef",
-            minWidth: 60,
           }}
           onClick={() => handleIconClick(icon.fullSrc)}
         >
@@ -90,16 +79,14 @@ const IconMenu = () => {
             width={60}
             height={60}
             style={{
-              border: "2.5px solid #7c3aed",
+              border: "2px solid red",
               borderRadius: "50%",
-              padding: "4px",
-              background: "#f3f4f6",
-              boxShadow: "0 2px 8px 0 rgba(124,58,237,0.08)",
+              padding: "3px",
             }}
-            whileHover={{ boxShadow: "0 0 18px 0 rgba(124,58,237,0.18)" }}
+            whileHover={{ boxShadow: "0 0 10px rgba(255, 0, 0, 0.8)" }}
             transition={{ duration: 0.3 }}
           />
-          <p style={{ marginTop: "12px", fontSize: "15px", fontWeight: 600, color: "#222", letterSpacing: 0.2 }}>{icon.label}</p>
+          <p style={{ marginTop: "10px", fontSize: "14px" }}>{icon.label}</p>
         </motion.div>
       ))}
 
@@ -111,7 +98,7 @@ const IconMenu = () => {
             left: 0,
             width: "100%",
             height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -121,39 +108,27 @@ const IconMenu = () => {
           <div
             style={{
               position: "relative",
-              padding: "32px 24px 24px 24px",
+              padding: "20px",
               textAlign: "center",
-              background: "#fff",
-              borderRadius: "18px",
-              boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)",
-              maxWidth: "90vw",
-              maxHeight: "90vh",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
             }}
           >
             <img
               src={popup.src}
               alt="Popup"
-              style={{ maxWidth: "80vw", maxHeight: "60vh", borderRadius: "10px" }}
+              style={{ maxWidth: "90%", maxHeight: "80%" }}
             />
             <button
               onClick={handleClosePopup}
               style={{
                 position: "absolute",
-                top: "12px",
-                right: "16px",
-                padding: "6px 14px",
-                backgroundColor: "#7c3aed",
+                top: "10px",
+                right: "10px",
+                padding: "5px 10px",
+                backgroundColor: "red",
                 color: "white",
                 border: "none",
-                borderRadius: "6px",
+                borderRadius: "5px",
                 cursor: "pointer",
-                fontWeight: 600,
-                fontSize: "1rem",
-                boxShadow: "0 2px 8px 0 rgba(124,58,237,0.12)",
-                transition: "background 0.2s",
               }}
             >
               Close
