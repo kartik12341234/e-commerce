@@ -13,135 +13,70 @@ const Pl = () => {
   };
 
   return (
-    <div className="container">
-      <div className="grid">
+    <div className="flex justify-center items-center p-8 overflow-hidden">
+      {/* Horizontal scrollable grid */}
+      <div className="flex flex-row flex-wrap gap-6 w-full overflow-x-auto scrollbar-hide snap-x snap-mandatory">
         {products.map((product, index) => (
-          <div className="circle" key={index}>
+          <div
+            key={index}
+            className="flex flex-col items-center text-center flex-shrink-0 w-44 snap-start"
+          >
             <video
               src={product.videoSrc}
               autoPlay
               loop
               muted
-              className="video"
+              className="w-20 h-20 bg-white bg-opacity-80 rounded-full object-cover border-2 border-gray-300 cursor-pointer transition-transform hover:scale-105"
               onClick={() => handleVideoClick(product.videoSrc)}
-            ></video>
-            <h3>{product.title}</h3>
-            <p>{product.subtitle}</p>
+            />
+            <h3 className="mt-2 mb-1 text-base font-bold">{product.title}</h3>
+            <p className="m-0 text-sm text-gray-600">{product.subtitle}</p>
           </div>
         ))}
       </div>
 
+      {/* Modal overlay and iframe */}
       {iframeSrc && (
-        <div className="iframe-container">
-          <iframe
-            src={iframeSrc}
-            frameBorder="0"
-            allowFullScreen
-            className="iframe"
-          ></iframe>
-          <button className="close-button" onClick={closeIframe}>
-            Close
-          </button>
-        </div>
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-50"
+            onClick={closeIframe}
+          />
+
+          {/* Modal container */}
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90vw] max-w-4xl h-[70vh] max-h-[500px] bg-white bg-opacity-95 rounded-xl shadow-2xl z-50 overflow-hidden">
+            <iframe
+              src={iframeSrc}
+              frameBorder="0"
+              allowFullScreen
+              className="w-full h-full"
+            />
+            <button
+              className="absolute top-3 right-3 bg-red-500 hover:bg-red-600 text-white border border-red-500 rounded-md px-3 py-1 cursor-pointer text-sm font-bold transition-colors"
+              onClick={closeIframe}
+            >
+              ✕
+            </button>
+          </div>
+        </>
       )}
 
+      {/* Custom styles for mobile */}
       <style jsx>{`
-        .container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 2rem;
-          overflow: hidden; /* Ensures the container doesn't overflow */
-        }
-
-        /* Horizontal Scrollable Grid */
-        .grid {
-          display: flex;
-          flex-direction: row;
-          flex-wrap: wrap;
-          gap: 1.5rem;
-          width: 100%;
-          overflow-x: auto; /* Enable horizontal scrolling */
-          -webkit-overflow-scrolling: touch;
-          scroll-snap-type: x mandatory; /* Smooth snapping of items */
-        }
-
-        /* Ensure individual items stay fixed and scroll horizontally */
-        .circle {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          flex-shrink: 0; /* Prevent shrinking when scrolling */
-          width: 180px; /* Fixed width for each item */
-          scroll-snap-align: start; /* Ensure items snap into view */
-        }
-
-        .circle .video {
-          width: 80px;
-          height: 80px;
-          background-color: rgba(255, 255, 255, 0.8);
-          border-radius: 50%;
-          object-fit: cover;
-          overflow: hidden;
-          border: 2px solid #ccc;
-          cursor: pointer;
-        }
-
-        h3 {
-          margin: 0.5rem 0 0.2rem;
-          font-size: 1rem;
-          font-weight: bold;
-        }
-
-        p {
-          margin: 0;
-          font-size: 0.9rem;
-          color: #666;
-        }
-
-        /* Iframe container for video playback */
-        .iframe-container {
-          position: fixed;
-          background-color: rgba(255, 255, 255, 0.8);
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          height: 450px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-          z-index: 1000;
-          border-radius: 10px;
-          overflow: hidden;
-        }
-
-        .iframe {
-          width: 100%;
-          height: 100%;
-          background-color: rgba(255, 255, 255, 0.8);
-        }
-
-        .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background: red;
-          color: white;
-          border: 1px solid red;
-          border-radius: 5%;
-          padding: 0.2rem;
-          cursor: pointer;
-          font-size: 1rem;
-          font-weight: bold;
-        }
-
-        /* Mobile adjustments for scrolling and layout */
         @media (max-width: 600px) {
-          .grid {
-            flex-wrap: nowrap; /* Prevent wrapping */
+          .w-44 {
+            width: 150px;
           }
-          .circle {
-            width: 150px; /* Adjust width for mobile */
-          }
+        }
+
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>

@@ -11,6 +11,7 @@ module.exports = {
         10000: "10000", // Custom z-index value
       },
       colors: {
+        customGreen: "#2a431c",
         background: "var(--background)",
         foreground: "var(--foreground)",
       },

@@ -5,23 +5,29 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Homeproduct from "@/components/Homeproduct";
 import Image from "next/image";
-import { User, UserCheck } from "lucide-react";
+import { User, UserCheck, Minus, Plus } from "lucide-react";
 import OilsTable from "@/components/OilsTable";
-import "./des.css"; // Import the CSS file for styling
 import CustomerReviews from "@/components/Review";
-import { Minus, Plane, Plus } from "lucide-react";
 import Pl from "@/components/Pl";
-export default function Page({ params }) {
-  // Unwrap params if it's a Promise (Next.js 14+)
-  let productIdParam = params?.productId;
-  try {
-    if (typeof params?.then === 'function') {
-      // params is a Promise
-      params = React.use(params);
-      productIdParam = params.productId;
-    }
-  } catch (e) {}
 
+export default function Page({ params }) {
+  // Properly handle params Promise for Next.js 14+
+  const [unwrappedParams, setUnwrappedParams] = useState(null);
+  
+  useEffect(() => {
+    async function unwrapParams() {
+      try {
+        const resolvedParams = await Promise.resolve(params);
+        setUnwrappedParams(resolvedParams);
+      } catch (e) {
+        console.error('Error unwrapping params:', e);
+      }
+    }
+    unwrapParams();
+  }, [params]);
+
+  const productIdParam = unwrappedParams?.productId;
+  
   const route = useRouter();
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({
@@ -62,7 +68,10 @@ export default function Page({ params }) {
 
   // Set productId from params
   useEffect(() => {
-    setProductId(productIdParam);
+    if (productIdParam) {
+      setProductId(productIdParam);
+      setNewReview(prev => ({ ...prev, productId: productIdParam }));
+    }
   }, [productIdParam]);
 
   // Fetch product details and reviews
@@ -99,7 +108,9 @@ export default function Page({ params }) {
       reviewSectionRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
+  
   const handleOptionChange = (size) => setSelectedOption(size);
+  
   const buy = () => {
     if (!selectedOption) {
       alert("Please select a product size before proceeding.");
@@ -107,12 +118,14 @@ export default function Page({ params }) {
     }
     route.push(`/checkout/${productId}?selectedSize=${selectedOption._id}&quantity=${quantity}`);
   };
+  
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  
   const addtocart = () => {
     alert("added to cart");
-    // Add to cart logic here
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -130,105 +143,66 @@ export default function Page({ params }) {
       console.error("Error submitting review:", error);
     }
   };
+  
   const toggleCollapse = (section) => {
     setCollapsedSections((prevState) => ({
       ...prevState,
       [section]: !prevState[section],
     }));
   };
+  
   const renderCollapsibleSection = (sectionName, data) => {
     if (!data || data.length === 0) return null;
     return (
-      <div style={{ marginBottom: "16px" }}>
+      <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-100">
         <button
           onClick={() => toggleCollapse(sectionName)}
-          style={{
-            fontSize: "1.125rem",
-            fontWeight: "600",
-            display: "flex",
-            color: "#2d3748",
-            padding: "8px",
-            borderRadius: "8px",
-            width: "100%",
-            justifyContent: "space-between",
-            cursor: "pointer",
-            transition: "background-color 0.3s",
-          }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#e2e8f0")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#edf2f7")}
+          className="w-full flex justify-between items-center p-4 text-left font-semibold text-gray-800 hover:bg-gray-50 rounded-lg transition-colors duration-200"
         >
-          <h1 style={{ textTransform: "uppercase" }}>{sectionName}</h1>
-          <h1>
-            {collapsedSections[sectionName] ? <Minus /> : <Plus />}
-          </h1>
+          <h2 className="text-lg font-bold uppercase tracking-wide">{sectionName}</h2>
+          <div className="text-gray-600">
+            {collapsedSections[sectionName] ? <Minus size={20} /> : <Plus size={20} />}
+          </div>
         </button>
         {collapsedSections[sectionName] && (
-          <div
-            className="hiiio"
-            style={{
-              marginTop: "8px",
-              display: "flex",
-              gap: "20px",
-            }}
-          >
-            {data.map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  marginBottom: "16px",
-                }}
-              >
-                <div
-                  className="dio"
-                  style={{
-                    marginLeft: "80px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    margin: "auto",
-                  }}
-                >
-                  <Image
-                    src={item.imageUrl}
-                    alt={`Image for ${sectionName}`}
-                    width={80}
-                    height={80}
-                    style={{
-                      marginTop: "10px",
-                      borderRadius: "8px",
-                      marginLeft: "10%",
-                      marginBottom: "16px",
-                      maxHeight: "80px",
-                    }}
-                  />
-                  <div style={{ wordWrap: "break-word" }}>
-                    <p
-                      style={{
-                        width: "100%",
-                        fontSize: "1rem",
-                        color: "#000",
-                        lineHeight: "1.5",
-                        fontWeight: "400",
-                        border: "1px solid #f5f5f5",
-                        margin: "8px 10px 0",
-                      }}
-                    >
+          <div className="px-4 pb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {data.map((item, index) => (
+                <div key={index} className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex flex-col items-center">
+                    <div className="w-20 h-20 mb-3 rounded-lg overflow-hidden">
+                      <Image
+                        src={item.imageUrl}
+                        alt={`Image for ${sectionName}`}
+                        width={80}
+                        height={80}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="text-sm text-gray-700 text-center leading-relaxed">
                       {item.paragraph}
                     </p>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </div>
     );
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-xl font-medium text-gray-600">Loading...</div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-xl font-medium text-red-600">{error}</div>
+    </div>
+  );
 
   // Log and adjust sections dynamically based on the product object
   const sections = Object.keys(product).reduce((acc, key) => {
@@ -240,421 +214,195 @@ export default function Page({ params }) {
 
   return (
     <>
-      <Pl></Pl>{" "}
-      <div className="containerp">
-        <div className="grid">
-          {/* Product Image */}
-          <div
-            className="bio"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              margin: "auto",
-              gap: "10px",
-            }}
-          >
-            <div className="lesh" style={{ marginLeft: "-30px" }}>
-              {" "}
-              {/* Additional Images Section */}
-              {product?.additionalImages &&
-                product?.additionalImages.length > 0 && (
-                  <div className="additional-images">
-                    <div className="additional-images-container">
-                      {product.additionalImages.map((imageUrl, index) => (
-                        <img
-                          key={index}
-                          src={imageUrl}
-                          alt={`Additional image ${index + 1}`}
-                        />
-                      ))}
-                    </div>
+      <Pl />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Product Images */}
+          <div className="flex gap-4">
+            {/* Additional Images - Vertical */}
+            {product?.additionalImages && product?.additionalImages.length > 0 && (
+              <div className="flex flex-col gap-2">
+                {product.additionalImages.map((imageUrl, index) => (
+                  <div key={index} className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 cursor-pointer">
+                    <img
+                      src={imageUrl}
+                      alt={`Additional image ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+                    />
                   </div>
-                )}
-            </div>
-            <div className="product-image-container">
+                ))}
+              </div>
+            )}
+            
+            {/* Main Product Image */}
+            <div className="flex-1 aspect-square bg-gray-50 rounded-2xl overflow-hidden shadow-lg">
               <img
                 src={product?.imageUrl}
                 alt={product?.name}
-                className="product-image"
+                className="w-full h-full object-cover"
               />
             </div>
           </div>
 
           {/* Product Details */}
-          <div className="product-details">
-            <h1 className="product-name" style={{ marginTop: "25px" }}>
-              {product?.name}
-            </h1>
-            <div
-              className="fdgshj"
-              style={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <h1 className="product-nam" style={{ marginTop: "-5px" }}>
-                <span style={{ color: "#f2cb05", fontSize: "15px" }}>
-                  ⭐⭐⭐⭐⭐
-                </span>{" "}
-                <span>| {number} reviews</span>
-              </h1>
-
-              {selectedOption ? (
-                <h1 className="product-price" style={{}}>
-                  Price: ₹{selectedOption.price * quantity}
-                  <span style={{ fontSize: "20px", color: "#000000" }}>
-                    MRP (Incl. of all taxes)
-                  </span>
-                </h1>
-              ) : (
-                <h1 className="product-price">
-                  Select a size to see the price
-                </h1>
-              )}
-            </div>
-
-            <h1
-              style={{
-                marginTop: "-20px",
-
-                color: "grey",
-              }}
-              className="product-nam"
-              onClick={handleScrollToReviews}
-            >
-              <span
-                style={{
-                  marginTop: "-15px",
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  color: "#000",
-                }}
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product?.name}</h1>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="text-yellow-400 text-sm">⭐⭐⭐⭐⭐</div>
+                  <span className="text-gray-600">| {number} reviews</span>
+                </div>
+                {selectedOption ? (
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-gray-900">₹{selectedOption.price * quantity}</div>
+                    <div className="text-sm text-gray-600">MRP (Incl. of all taxes)</div>
+                  </div>
+                ) : (
+                  <div className="text-lg text-gray-500">Select a size to see the price</div>
+                )}
+              </div>
+              <button
+                onClick={handleScrollToReviews}
+                className="text-sm text-blue-600 hover:text-blue-800 underline transition-colors duration-200"
               >
                 see all reviews
-              </span>
-            </h1>
-            <div className="showimg" style={{ display: "flex", gap: "50px" }}>
-              <img
-                src={
-                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
-                }
-                width={100}
-                height={100}
-                alt="Image"
-              ></img>
-              <img
-                src={
-                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
-                }
-                width={100}
-                height={100}
-                alt="Image"
-              ></img>
-              <img
-                src={
-                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
-                }
-                width={100}
-                height={100}
-                alt="Image"
-              ></img>
-              <img
-                src={
-                  "https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
-                }
-                width={100}
-                height={100}
-                alt="Image"
-              ></img>
+              </button>
             </div>
 
-            {/* Sizes Section */}
-            <div className="size-section" style={{ justifyContent: "center" }}>
-              <div className="size-options">
+            {/* Feature Icons - Horizontal Row */}
+            <div className="flex justify-center gap-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="w-16 h-16 bg-[#2a431c] rounded-full flex items-center justify-center">
+                  <img
+                    src="https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
+                    width={40}
+                    height={40}
+                    alt="Feature icon"
+                    className="w-10 h-10 filter invert"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Size Selection - 4 Cards in One Row */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Choose Size</h3>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {product?.sizes.map((size) => (
-                  <div
+                  <button
                     key={size._id}
-                    className={`size-option ${
-                      selectedOption?._id === size._id ? "selected" : ""
-                    }`}
                     onClick={() => handleOptionChange(size)}
+                    className={`border-2 rounded-lg overflow-hidden transition-all duration-200 ${
+                      selectedOption?._id === size._id
+                        ? 'bg-[#2a431c] shadow-md'
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
                   >
-                    <div
-                      className="high"
-                      style={{
-                        borderBottom: "3px solid black",
-                        // marginTop: "-2px",
-                        backgroundColor:
-                          selectedOption?._id === size._id
-                            ? "#00584b"
-                            : "#ece9e98e",
-                      }}
-                    >
-                      <span className="size-name">{size.size} jar</span>
+                    <div className={`py-2 px-3 text-sm font-medium border-b-2 ${
+                      selectedOption?._id === size._id
+                        ? 'bg-[#2a431c] text-white bg-[#2a431c]'
+                        : 'bg-gray-100 text-gray-800 border-gray-200'
+                    }`}>
+                      {size.size} jar
                     </div>
-                    <div
-                      className="hyj"
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {" "}
-                      <span
-                        className="size-price"
-                        style={{
-                          color: "black",
-                          width: "100%",
-                          borderBottom: "1px solid #000",
-                        }}
-                      >
+                    <div className="p-3 bg-white">
+                      <div className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-1">
                         ₹{size.price}
-                      </span>
-                      <span className="size-price" style={{ color: "black" }}>
-                        ₹{size.price / 1000}/ ml
-                      </span>
+                      </div>
+                      <div className="text-sm text-gray-600 mt-1">
+                        ₹{(size.price / 1000).toFixed(2)}/ml
+                      </div>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
 
-            {/* Quantity Selector */}
-            {/* <div
-              className="quantity-selector"
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              <button className="quantity-button" onClick={handleDecrease}>
-                -
-              </button>
-              <input
-                type="number"
-                value={quantity}
-                className="quantity-input"
-                readOnly
-              />
-              <button className="quantity-button" onClick={handleIncrease}>
-                +
-              </button>
-            </div> */}
-
-            {/* Add to Cart and Buy Now Buttons */}
-            <div
-              // className="buttos"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                cursor: "pointer",
-                // backgroundColor: "#2a431c",
-              }}
-            >
-              <button
-                className=""
-                onClick={addtocart}
-                style={{
-                  width: "400px",
-                  color: "#fff",
-                  fontWeight: "700",
-                  fontSize: "22px",
-                  backgroundColor: "#2a431c",
-                }}
-              >
-                ADD TO CART
-              </button>
-              <div
-                className="quantity-selector"
-                style={{
-                  // marginLeft: "100px",
-                  display: "flex",
-                  justifyContent: "center",
-                  backgroundColor: "#fff",
-                  width: "200px",
-                }}
-              >
-                <button className="quantity-button" onClick={handleDecrease}>
-                  -
+            {/* Quantity and Actions */}
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <button
+                  onClick={addtocart}
+                  className="flex-1 bg-[#2a431c] hover:bg-[#2a431c] text-white font-bold py-4 px-6 rounded-lg text-lg transition-colors duration-200"
+                >
+                  ADD TO CART
                 </button>
-                <input
-                  type="number"
-                  value={quantity}
-                  className="quantity-input"
-                  readOnly
-                />
-                <button className="quantity-button" onClick={handleIncrease}>
-                  +
-                </button>
+                
+                <div className="flex items-center border-2 bg-[#2a431c] rounded-lg overflow-hidden bg-white">
+                  <button
+                    onClick={handleDecrease}
+                    className="bg-[#2a431c] hover:bg-[#2a431c] text-white px-4 py-4 font-bold text-xl transition-colors duration-200 flex items-center justify-center"
+                  >
+                    <Minus size={18} />
+                  </button>
+                  <input
+                    type="number"
+                    value={quantity}
+                    readOnly
+                    className="w-16 text-center text-lg font-medium bg-white outline-none border-0"
+                  />
+                  <button
+                    onClick={handleIncrease}
+                    className="bg-[#2a431c] hover:bg-[#2a431c] text-white px-4 py-4 font-bold text-xl transition-colors duration-200 flex items-center justify-center"
+                  >
+                    <Plus size={18} />
+                  </button>
+                </div>
               </div>
-            </div>
-            <div
-              className="biooowe"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                cursor: "pointer",
-                backgroundColor: "#2a431c",
 
-                display: "flex",
-                justifyContent: "center",
-                cursor: "pointer",
-              }}
-            >
-              {" "}
               <button
-                style={{
-                  color: "#fff",
-                  fontWeight: "700",
-                  cursor: "pointer",
-
-                  backgroundColor: "#2a431c",
-                  color: "white",
-                  fontSize: "25px",
-                }}
-                // className="button buy-now"
                 onClick={buy}
+                className="w-full bg-[#2a431c] hover:bg-[#2a431c] text-white font-bold py-4 px-6 rounded-lg text-xl transition-colors duration-200"
               >
                 BUY NOW
               </button>
+
+              <button
+                onClick={buy}
+                className="w-full bg-[#2a431c] hover:bg-[#2a431c] text-white font-bold py-4 px-6 rounded-lg text-xl transition-colors duration-200"
+              >
+                SUBSCRIBE
+              </button>
             </div>
-            <button
-              style={{
-                cursor: "pointer",
-                backgroundColor: "#2a431c",
-                color: "white",
-                fontWeight: "700",
-                fontSize: "25px",
-              }}
-              // className="button buy-nows"
-              onClick={buy}
-            >
-              SUBSCRIBE
-            </button>
           </div>
         </div>
-        {/* Fixed Cart Bar: Only show after scrolling down a bit */}
+
+        {/* Fixed Cart Bar */}
         {showCartBar && (
-          <div
-            className="cart-container"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "fixed",
-              bottom: "60px",
-              width: "100%",
-              zIndex: 1000,
-              boxShadow: "0 2px 16px rgba(0,0,0,0.07)",
-              padding: "12px 0",
-            }}
-          >
-            <div
-              className="buttons-wrapper"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                width: "100%",
-                gap: "16px",
-                alignItems: "center",
-                maxWidth: "900px",
-              }}
-            >
+          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 p-4">
+            <div className="max-w-4xl mx-auto flex items-center gap-4">
               <button
                 onClick={addtocart}
-                style={{
-                  flex: 1,
-                  color: "#fff",
-                  fontWeight: 700,
-                  textAlign: "center",
-                  fontSize: "22px",
-                  backgroundColor: "#2a431c",
-                  border: "none",
-                  borderRadius: "8px",
-                  height: "52px",
-                  minWidth: "160px",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-                  transition: "background 0.2s",
-                }}
+                className="flex-1 bg-[#2a431c] hover:bg-[#2a431c] text-white font-bold py-3 px-6 rounded-lg text-lg transition-colors duration-200"
               >
                 ADD TO CART
               </button>
-              <div
-                className="quantity-selector"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor: "#fff",
-                  border: "1.5px solid #2a431c",
-                  borderRadius: "8px",
-                  height: "52px",
-                  minWidth: "120px",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-                  overflow: "hidden",
-                }}
-              >
+              
+              <div className="flex items-center border-2 bg-[#2a431c] rounded-lg overflow-hidden bg-white">
                 <button
-                  className="quantity-button"
                   onClick={handleDecrease}
-                  style={{
-                    background: "#2a431c",
-                    color: "#fff",
-                    border: "none",
-                    width: "44px",
-                    height: "100%",
-                    fontSize: "22px",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    borderRadius: 0,
-                  }}
+                  className="bg-[#2a431c] hover:bg-[#2a431c] text-white px-3 py-3 font-bold transition-colors duration-200 flex items-center justify-center"
                 >
-                  -
+                  <Minus size={16} />
                 </button>
                 <input
                   type="number"
                   value={quantity}
-                  className="quantity-input"
                   readOnly
-                  style={{
-                    width: "40px",
-                    textAlign: "center",
-                    fontSize: "20px",
-                    border: "none",
-                    outline: "none",
-                    background: "#fff",
-                  }}
+                  className="w-12 text-center font-medium bg-white outline-none border-0"
                 />
                 <button
-                  className="quantity-button"
                   onClick={handleIncrease}
-                  style={{
-                    background: "#2a431c",
-                    color: "#fff",
-                    border: "none",
-                    width: "44px",
-                    height: "100%",
-                    fontSize: "22px",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    borderRadius: 0,
-                  }}
+                  className="bg-[#2a431c] hover:bg-[#2a431c] text-white px-3 py-3 font-bold transition-colors duration-200 flex items-center justify-center"
                 >
-                  +
+                  <Plus size={16} />
                 </button>
               </div>
+              
               <button
-                style={{
-                  flex: 1,
-                  color: "#fff",
-                  fontWeight: 700,
-                  backgroundColor: "#2a431c",
-                  textAlign: "center",
-                  fontSize: "22px",
-                  border: "none",
-                  borderRadius: "8px",
-                  height: "52px",
-                  minWidth: "160px",
-                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
-                  transition: "background 0.2s",
-                }}
                 onClick={buy}
+                className="flex-1 bg-[#2a431c] hover:bg-[#2a431c] text-white font-bold py-3 px-6 rounded-lg text-lg transition-colors duration-200"
               >
                 BUY NOW
               </button>
@@ -662,163 +410,130 @@ export default function Page({ params }) {
           </div>
         )}
 
-        <div style={{ padding: "16px" }}>
+        {/* Collapsible Sections */}
+        <div className="mt-12 space-y-4">
           {Object.keys(sections)
             .slice(0, -2)
             .map((sectionName) => {
               const sectionData = sections[sectionName];
               if (!sectionData || sectionData.length === 0) {
-                return null; // Skip rendering sections with no data
+                return null;
               }
               return renderCollapsibleSection(sectionName, sectionData);
             })}
         </div>
+      </div>
 
-        {/* Additional Images Section */}
-        {/* {product?.additionalImages && product?.additionalImages.length > 0 && (
-      <div className="additional-images">
-        <div className="additional-images-container">
-          {product.additionalImages.map((imageUrl, index) => (
-            <img
-              key={index}
-              src={imageUrl}
-              alt={`Additional image ${index + 1}`}
-            />
-          ))}
+      {/* Reviews Section */}
+      <div className="bg-gray-50 py-12" ref={reviewSectionRef}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Customer Reviews</h2>
+          <Wr />
+
+        {/* Write a Review Form - Centered */}
+<div className="flex justify-center items-center mb-8">
+  <form
+    onSubmit={handleSubmit}
+    className="bg-white p-6 rounded-lg shadow-sm max-w-2xl w-full"
+  >
+    <h3 className="text-xl font-semibold text-gray-900 mb-4">Write a Review</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <input
+        type="text"
+        placeholder="Your name"
+        value={newReview.username}
+        onChange={(e) =>
+          setNewReview({ ...newReview, username: e.target.value })
+        }
+        required
+        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+      />
+      <select
+        value={newReview.rating}
+        onChange={(e) =>
+          setNewReview({ ...newReview, rating: parseInt(e.target.value) })
+        }
+        className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+      >
+        {[5, 4, 3, 2, 1].map((star) => (
+          <option key={star} value={star}>
+            {star} Star{star > 1 ? "s" : ""}
+          </option>
+        ))}
+      </select>
+    </div>
+    <textarea
+      placeholder="Write your review"
+      value={newReview.comment}
+      onChange={(e) =>
+        setNewReview({ ...newReview, comment: e.target.value })
+      }
+      required
+      rows={4}
+      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none mb-4"
+    />
+    <button
+      type="submit"
+      className="bg-[#2a431c] hover:bg-[#2a431c] text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200"
+    >
+      Submit Review
+    </button>
+  </form>
+</div>
+
+
+          {/* Reviews List - Full Width from Next Row */}
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h3 className="text-xl font-semibold text-gray-900">All Reviews</h3>
+              <select className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none">
+                <option>Most Recent</option>
+                <option>Highest Rating</option>
+                <option>Lowest Rating</option>
+              </select>
+            </div>
+            
+            {reviews.map((review) => (
+              <div key={review._id} className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                      <UserCheck size={20} className="text-gray-600" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h4 className="font-semibold text-gray-900">{review.username}</h4>
+                        {review.verified && (
+                          <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full font-medium">Verified</span>
+                        )}
+                      </div>
+                      <div className="text-yellow-400 text-sm">
+                        {Array(review.rating).fill("⭐").join("")}
+                      </div>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {new Date(review.date).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-gray-700 mb-4 leading-relaxed">{review.comment}</p>
+                <div className="flex items-center gap-4">
+                  <button className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                    👍 {review.helpfulVotes || 0}
+                  </button>
+                  <button className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                    👎 {review.notHelpfulVotes || 0}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    )} */}
-        {/* <div className="collapsible-section">
-      <div
-        className="section-header"
-        onClick={() => toggleSection("description")}
-      >
-        <h3>Description</h3>
-        <span>{sections.description ? "-" : "+"}</span>
-      </div>
-      {sections.description && <p>{product?.description}</p>}
-    </div>
 
-    <div className="collapsible-section">
-      <div
-        className="section-header"
-        onClick={() => toggleSection("ingredients")}
-      >
-        <h3>Ingredients</h3>
-        <span>{sections.ingredients ? "-" : "+"}</span>
-      </div>
-      {sections.ingredients && <p>{product?.ingredients}</p>}
-    </div>
-
-    <div className="collapsible-section">
-      <div
-        className="section-header"
-        onClick={() => toggleSection("benefits")}
-      >
-        <h3>Benefits</h3>
-        <span>{sections.benefits ? "-" : "+"}</span>
-      </div>
-      {sections.benefits && <p>{product?.Benefits}</p>}
-    </div>
-
-    <div className="collapsible-section">
-      <div
-        className="section-header"
-        onClick={() => toggleSection("storageInfo")}
-      >
-        <h3>Storage Info</h3>
-        <span>{sections.storageInfo ? "-" : "+"}</span>
-      </div>
-      {sections.storageInfo && <p>{product?.storageinfo}</p>}
-    </div>*/}
-      </div>
-      <div className="msa" ref={reviewSectionRef}>
-        <>
-          <h2>Customer Reviews</h2>
-          <Wr></Wr>
-
-          <div className="reviews-container">
-            <div className="review-summary">
-              {/* Add a summary UI for the average rating */}
-            </div>
-            <form onSubmit={handleSubmit} className="review-form">
-              <input
-                type="text"
-                placeholder="Your name"
-                value={newReview.username}
-                onChange={(e) =>
-                  setNewReview({ ...newReview, username: e.target.value })
-                }
-                required
-              />
-              <textarea
-                placeholder="Write your review"
-                value={newReview.comment}
-                onChange={(e) =>
-                  setNewReview({ ...newReview, comment: e.target.value })
-                }
-                required
-              />
-              <select
-                value={newReview.rating}
-                onChange={(e) =>
-                  setNewReview({
-                    ...newReview,
-                    rating: parseInt(e.target.value),
-                  })
-                }
-              >
-                {[5, 4, 3, 2, 1].map((star) => (
-                  <option key={star} value={star}>
-                    {star} Star{star > 1 ? "s" : ""}
-                  </option>
-                ))}
-              </select>
-              <button type="submit" style={{ backgroundColor: "#2a431c" }}>
-                Submit Review
-              </button>
-            </form>
-
-            <div className="reviews-list">
-              {reviews.map((review) => (
-                <div key={review._id} className="review">
-                  <div className="rating">
-                    {Array(review.rating).fill("⭐")}
-                  </div>
-                  <h3 style={{ display: "flex", gap: "10px" }}>
-                    <div
-                      className="dj"
-                      style={{ backgroundColor: "grey", borderRadius: "4px" }}
-                    >
-                      <UserCheck color="#000"></UserCheck>{" "}
-                    </div>
-                    {review.username}{" "}
-                    {/* <span className="verified" style={{ marginLeft: "-6px" }}>
-                          Veified ✔{" "}
-                        </span> */}
-                    {review.verified && (
-                      <span className="verified" style={{ marginLeft: "-5px" }}>
-                        Veified ✔{" "}
-                      </span>
-                    )}
-                  </h3>
-                  <p>{review.comment}</p>
-                  <div className="review-footer">
-                    <span>{new Date(review.date).toLocaleDateString()}</span>
-                    <div>
-                      <button>👍 {review.helpfulVotes}</button>
-                      <button>👎 {review.notHelpfulVotes}</button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </>
-      </div>
-      <OilsTable></OilsTable>
-      <div className="cin" style={{ marginTop: "150px" }}>
-        <Homeproduct></Homeproduct>
+      <OilsTable />
+      <div className="mt-16">
+        <Homeproduct />
       </div>
     </>
   );
