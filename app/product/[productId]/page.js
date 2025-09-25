@@ -273,13 +273,13 @@ export default function Page({ params }) {
             {/* Feature Icons - Horizontal Row */}
             <div className="flex justify-center gap-8">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-16 h-16 bg-[#2a431c] rounded-full flex items-center justify-center">
+                <div key={i} className="w-16 h-16  rounded-full flex items-center justify-center">
                   <img
                     src="https://www.anveshan.farm/cdn/shop/files/newly_active.svg?v=1713435265&width=60"
-                    width={40}
-                    height={40}
+                    width={50}
+                    height={50}
                     alt="Feature icon"
-                    className="w-10 h-10 filter invert"
+                    className="w-20 h-20 "
                   />
                 </div>
               ))}
